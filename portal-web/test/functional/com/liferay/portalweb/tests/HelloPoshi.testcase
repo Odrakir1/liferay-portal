@@ -1,0 +1,162 @@
+@component-name = "app-builder"
+definition {
+    property testray.main.component.name = "App Builder";
+
+    setUp {
+        TestCase.setUpPortalInstance();
+
+        User.firstLoginPG();
+
+        Navigator.openURL();
+    }
+
+    // tearDown {
+    //     User.logoutAndLoginPG(
+    //         userLoginEmailAddress = "test@liferay.com",
+    //         userLoginFullName = "Test Test");
+    // }
+
+    @description = "Access Portal Global Menu and validate CONFIGURATION string at Control Panel"
+    @priority = "5"
+    test ValidateConfigurationStringAtControlPanel {
+        
+        ApplicationsMenuHelper.openApplicationsMenu();
+        ApplicationsMenu.gotoPanel(panel = "Control Panel");
+        AssertTextEquals(
+			locator1 = "Panel#CONTROL_PANEL_CONFIGURATION",
+			value1 = "Configuration");
+
+    }
+
+    @description = "Set Screen size to custom and validate values"
+    @priority = "5"
+    test SetScreenSizeAndValidateValues {
+
+
+        MobileDevice.previewPG(
+			deviceType = "custom",
+			height = "1920",
+			width = "1080");
+
+        Pause(locator1 = "3000");
+
+        ControlMenu.openSimulation();   
+        ControlMenu.openSimulation();   
+
+
+        AssertTextEquals(
+			locator1 = "ControlMenuPreviewPanel#PREVIEW_CUSTOM_HEIGHT_FIELD",
+			value1 = "1920");
+
+        AssertTextEquals(
+			locator1 = "ControlMenuPreviewPanel#PREVIEW_CUSTOM_WIDTH_FIELD",
+			value1 = "1080");
+
+
+    }
+
+    test FantasticTest{
+
+        ProductMenu.gotoPortlet(
+            category = "Content & Data",
+            portlet = "Web Content"
+        );
+
+        NavItem.gotoStructures();
+
+        WebContentStructures.addCP(structureName = "Anything");
+        DataEngine.addFields(fieldNameList = "Numeric,Text");
+        Button.clickSave();       
+    
+
+        WebContentStructures.editStructureDefaultValuesCP(structureName = "Anything");
+
+        Button.clickSave();
+
+        Alert.viewSuccessMessage();
+
+        WebContentStructures.deleteCP(structureName = "Anything");
+
+        Alert.viewSuccessMessage();       
+
+
+    }
+
+    test ValidateTranslations {
+
+        ProductMenu.gotoPortlet(
+            category = "Content & Data",
+            portlet = "Web Content"
+        );
+
+
+        NavItem.gotoStructures();
+
+        WebContentStructures.addCP(structureName = "Template");
+
+        DataEngine.addField(fieldName = "Text", fieldFieldLabel = "Text");
+
+        // DataEngine.editFieldTip(fieldFieldLabel = "Text", fieldHelp = "Field help text here");
+
+        // DataEngine.addField(fieldName = "Single Selection", fieldFieldLabel = "Selecione um estado");
+
+        // DataEngine.editFieldTip(fieldFieldLabel = "Selecione um estado", fieldHelp = "Selecione apenas um estado");
+
+        // var index = "1";
+
+        // for (var optionValue : list "value 1,value 2,value 3") {
+		// 		DataEngine.addFieldOption(
+		// 			fieldFieldLabel = "Selecione um estado",
+		// 			index = "${index}",
+		// 			optionValue = "${optionValue}");
+
+		// 		var index = ${index} + 1;
+		// 	}
+
+        // FormViewBuilder.editFieldLabel(fieldLabel = "Selecione um estado", label = "Label editado");
+
+        // DataEngine.addField(fieldName = "Multiple Selection", fieldFieldLabel = "Selecione as alternativas corretas");
+
+        // FormViewBuilder.editFieldLabel(fieldLabel = "Selecione as alternativas corretas", label = "Label editado");
+
+        // DataEngine.editFieldRepeatable(fieldFieldLabel = "Selecione as alternativas corretas");
+
+        // DataEngine.editFieldRequired(fieldFieldLabel = "Selecione as alternativas corretas");
+
+        // var index = "1";
+
+        // for (var optionValue : list "value 1,value 2,value 3") {
+		// 		DataEngine.addFieldOption(
+		// 			fieldFieldLabel = "Selecione as alternativas corretas",
+		// 			index = "${index}",
+		// 			optionValue = "${optionValue}");
+
+		// 		var index = ${index} + 1;
+		// 	}
+
+        // DataEngine.addField(fieldName = "Date", fieldFieldLabel = "Data de nascimento");    
+        
+        // FormViewBuilder.editFieldLabel(fieldLabel = "Data de nascimento", label = "Nascimento");
+
+        // DataEngine.editFieldRequired(fieldFieldLabel = "Data de nascimento");
+
+        // WebContentStructures.addName(structureName = "Edited Structure");
+
+        // Button.clickSave();
+
+        WebContentStructures.addLocalization(
+			locale = "pt_BR",
+			localization1Name = "Exemplo"
+        );
+	
+        
+
+        
+
+        Pause(locator1 = "2000");
+
+        
+
+    }
+
+}

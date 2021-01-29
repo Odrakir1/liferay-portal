@@ -61,8 +61,7 @@ definition {
 
 		var rowNum = "0";
 
-		if(isSet(dmDocumentTypeFieldNames)){
-			
+		if (isSet(dmDocumentTypeFieldNames)) {
 			for (var dmDocumentTypeFieldName : list "${dmDocumentTypeFieldNames}") {
 				Type.sendKeys(
 					locator1 = "DocumentsAndMediaDocumentTypes#SEARCH_FIELD",
@@ -90,7 +89,6 @@ definition {
 
 				var rowNum = ${rowNum} + 1;
 			}
-
 		}
 
 		if (isSet(dmDocumentTypeDescription)) {

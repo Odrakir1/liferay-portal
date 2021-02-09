@@ -1289,4 +1289,15 @@ definition {
 			value1 = "${nestedFieldData}");
 	}
 
+	macro gotoAdvancedTabOfField{
+		AssertClick.assertPartialTextClickAt(
+			key_fieldFieldLabel = "${fieldLabel}",
+			locator1 = "DDMEditStructure#FORM_FIELD_CONTAINER",
+			value1 = "${fieldLabel}");
+
+		if (IsElementNotPresent(locator1 = "NavTab#ACTIVE_TAB_LINK", key_tab = "Advanced")) {
+			Navigator.gotoNavTab(navTab = "Advanced");
+		}
+	}
+
 }

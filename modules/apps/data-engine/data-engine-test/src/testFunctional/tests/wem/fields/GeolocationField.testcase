@@ -235,14 +235,7 @@ definition {
 
 		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
 
-		AssertClick.assertPartialTextClickAt(
-			key_fieldFieldLabel = "Localization",
-			locator1 = "DDMEditStructure#FORM_FIELD_CONTAINER",
-			value1 = "Localization");
-
-		if (IsElementNotPresent(locator1 = "NavTab#ACTIVE_TAB_LINK", key_tab = "Advanced")) {
-			Navigator.gotoNavTab(navTab = "Advanced");
-		}
+		DataEngine.gotoAdvancedTabOfField(fieldLabel = "Localization");
 
 		FormFields.viewRadioValue(
 			fieldName = "indexType",

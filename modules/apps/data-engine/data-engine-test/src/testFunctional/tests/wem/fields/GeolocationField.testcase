@@ -147,7 +147,7 @@ definition {
 
 	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
 	@priority = "5"
-	test SetGeolocationLabel {
+	test SetGeolocationLabelHelpTextAndReference {
 		property portal.acceptance = "false";
 
 		WebContentStructures.saveCP(structureName = "My Structure Name");
@@ -157,13 +157,8 @@ definition {
 		FormFields.viewTextLabel(
 			fieldLabel = "Localization",
 			fieldName = "Geolocation");
-	}
 
-	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
-	@priority = "5"
-	test SetHelpTextOfGeolocation {
-		property portal.acceptance = "false";
-
+		
 		DataEngine.editFieldTip(
 			fieldFieldLabel = "Localization",
 			fieldHelp = "your localization");
@@ -175,14 +170,7 @@ definition {
 		FormFields.viewFieldHelpText(
 			fieldHelpText = "your localization",
 			fieldName = "Geolocation");
-	}
-
-	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
-	@ignore = "true"
-	@priority = "4"
-	test SetReferenceOfGeolocation {
-		property portal.acceptance = "false";
-
+		
 		WebContentStructures.saveCP(structureName = "My Structure Name");
 
 		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");

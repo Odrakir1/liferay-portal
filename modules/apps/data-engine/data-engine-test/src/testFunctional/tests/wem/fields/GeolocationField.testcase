@@ -18,7 +18,11 @@ definition {
 
 		WebContentStructures.addCP(
 			structureDescription = "My Structure Description",
-			structureName = "My Structure Name 1");
+			structureName = "My Structure Name");
+
+		DataEngine.addField(
+			fieldFieldLabel = "Localization",
+			fieldName = "Geolocation");
 	}
 
 	tearDown {
@@ -30,37 +34,6 @@ definition {
 		else {
 			JSONGroup.deleteGroupByName(groupName = "Test Site Name");
 		}
-	}
-
-	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
-	@priority = "5"
-	test DisableSearchableOfGeolocation {
-		property portal.acceptance = "false";
-
-		DataEngine.addField(
-			fieldFieldLabel = "Localization",
-			fieldName = "Geolocation");
-
-		DataEngine.editFieldSearchable(
-			fieldFieldLabel = "Localization",
-			searchableType = "Disable");
-
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
-
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
-
-		AssertClick.assertPartialTextClickAt(
-			key_fieldFieldLabel = "Localization",
-			locator1 = "DDMEditStructure#FORM_FIELD_CONTAINER",
-			value1 = "Localization");
-
-		if (IsElementNotPresent(locator1 = "NavTab#ACTIVE_TAB_LINK", key_tab = "Advanced")) {
-			Navigator.gotoNavTab(navTab = "Advanced");
-		}
-
-		FormFields.viewRadioValue(
-			fieldName = "indexType",
-			fieldValue = "Disable");
 	}
 
 	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
@@ -78,9 +51,9 @@ definition {
 
 		DataEngine.duplicate(fieldFieldLabel = "${key_Label}");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
 
 		AssertElementPresent(
 			key_fieldsetLabel = "${key_Label}",
@@ -96,178 +69,115 @@ definition {
 	test DuplicateRepeatableGeolocationOnWebContent {
 		property portal.acceptance = "false";
 
-		DataEngine.addField(
-			fieldFieldLabel = "Localization",
-			fieldName = "Geolocation");
-
 		DataEngine.editFieldRepeatable(fieldFieldLabel = "Localization");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
+		WebContentStructures.saveCP(structureName = "My Structure Name");
+
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
+
+		AssertElementPresent(locator1 = "FormFields#FIELD_ADD_DUPLICATE");
+
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
 		Navigator.gotoNavItem(navItem = "Web Content");
 
 		LexiconEntry.gotoAdd();
 
-		MenuItem.click(menuItem = "My Structure Name 1");
+		MenuItem.click(menuItem = "My Structure Name");
 
-		WebContent.addCP(webContentTitle = "My Web Content Name 1");
+		WebContent.addCP(webContentTitle = "My Web Content Name");
 
 		DataEngine.addRepeatableField(fieldName = "Localization");
 
 		Button.clickPublish();
 
-		WebContentNavigator.gotoEditCP(webContentTitle = "My Web Content Name 1");
+		WebContentNavigator.gotoEditCP(webContentTitle = "My Web Content Name");
 
 		AssertElementPresent(locator1 = "FormFields#FIELD_ADD_REMOVE");
 	}
 
 	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
-	@ignore = "true"
-	@priority = "4"
-	test SetGeolocationAsRepeatable {
+	@priority = "5"
+	test EditSearchableOfGeolocation {
 		property portal.acceptance = "false";
 
-		DataEngine.addField(
+		DataEngine.editFieldSearchable(
 			fieldFieldLabel = "Localization",
-			fieldName = "Geolocation");
+			searchableType = "Disable");
 
-		DataEngine.editFieldRepeatable(fieldFieldLabel = "Localization");
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
 
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
+		DataEngine.gotoAdvancedTabOfField(fieldLabel = "Localization");
 
-		AssertElementPresent(locator1 = "FormFields#FIELD_ADD_DUPLICATE");
+		FormFields.viewRadioValue(
+			fieldName = "indexType",
+			fieldValue = "Disable");
+
+		DataEngine.editFieldSearchable(
+			fieldFieldLabel = "Localization",
+			searchableType = "Keyword");
+
+		WebContentStructures.saveCP(structureName = "My Structure Name");
+
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
+
+		DataEngine.gotoAdvancedTabOfField(fieldLabel = "Localization");
+
+		FormFields.viewRadioValue(
+			fieldName = "indexType",
+			fieldValue = "Keyword");
+
+		DataEngine.editFieldSearchable(
+			fieldFieldLabel = "Localization",
+			searchableType = "Text");
+
+		WebContentStructures.saveCP(structureName = "My Structure Name");
+
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
+
+		DataEngine.gotoAdvancedTabOfField(fieldLabel = "Localization");
+
+		FormFields.viewRadioValue(
+			fieldName = "indexType",
+			fieldValue = "Text");
 	}
 
 	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
 	@priority = "5"
-	test SetGeolocationLabel {
+	test SetGeolocationLabelHelpTextAndReference {
 		property portal.acceptance = "false";
 
-		DataEngine.addField(
-			fieldFieldLabel = "Localization",
-			fieldName = "Geolocation");
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
-
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
 
 		FormFields.viewTextLabel(
 			fieldLabel = "Localization",
-			fieldName = "Geolocation");
-	}
-
-	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
-	@priority = "5"
-	test SetHelpTextOfGeolocation {
-		property portal.acceptance = "false";
-
-		DataEngine.addField(
-			fieldFieldLabel = "Localization",
 			fieldName = "Geolocation");
 
 		DataEngine.editFieldTip(
 			fieldFieldLabel = "Localization",
 			fieldHelp = "your localization");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
 
 		FormFields.viewFieldHelpText(
 			fieldHelpText = "your localization",
 			fieldName = "Geolocation");
-	}
 
-	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
-	@ignore = "true"
-	@priority = "4"
-	test SetReferenceOfGeolocation {
-		property portal.acceptance = "false";
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
-		DataEngine.addField(
-			fieldFieldLabel = "Localization",
-			fieldName = "Geolocation");
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
-
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
-
-		AssertClick.assertPartialTextClickAt(
-			key_fieldFieldLabel = "Localization",
-			locator1 = "DDMEditStructure#FORM_FIELD_CONTAINER",
-			value1 = "Localization");
-
-		if (IsElementNotPresent(locator1 = "NavTab#ACTIVE_TAB_LINK", key_tab = "Advanced")) {
-			Navigator.gotoNavTab(navTab = "Advanced");
-		}
+		DataEngine.gotoAdvancedTabOfField(fieldLabel = "Localization");
 
 		AssertTextEquals(
 			locator1 = "Form#FIELD_REFERENCE",
 			value1 = "Localization");
-	}
-
-	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
-	@priority = "4"
-	test SetSearchableOfGeolocationAsKeyword {
-		property portal.acceptance = "false";
-
-		DataEngine.addField(
-			fieldFieldLabel = "Localization",
-			fieldName = "Geolocation");
-
-		DataEngine.editFieldSearchable(
-			fieldFieldLabel = "Localization",
-			searchableType = "Keyword");
-
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
-
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
-
-		AssertClick.assertPartialTextClickAt(
-			key_fieldFieldLabel = "Localization",
-			locator1 = "DDMEditStructure#FORM_FIELD_CONTAINER",
-			value1 = "Localization");
-
-		if (IsElementNotPresent(locator1 = "NavTab#ACTIVE_TAB_LINK", key_tab = "Advanced")) {
-			Navigator.gotoNavTab(navTab = "Advanced");
-		}
-
-		FormFields.viewRadioValue(
-			fieldName = "indexType",
-			fieldValue = "Keyword");
-	}
-
-	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
-	@priority = "4"
-	test SetSearchableOfGeolocationAsText {
-		property portal.acceptance = "false";
-
-		DataEngine.addField(
-			fieldFieldLabel = "Localization",
-			fieldName = "Geolocation");
-
-		DataEngine.editFieldSearchable(
-			fieldFieldLabel = "Localization",
-			searchableType = "Text");
-
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
-
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
-
-		AssertClick.assertPartialTextClickAt(
-			key_fieldFieldLabel = "Localization",
-			locator1 = "DDMEditStructure#FORM_FIELD_CONTAINER",
-			value1 = "Localization");
-
-		if (IsElementNotPresent(locator1 = "NavTab#ACTIVE_TAB_LINK", key_tab = "Advanced")) {
-			Navigator.gotoNavTab(navTab = "Advanced");
-		}
-
-		FormFields.viewRadioValue(
-			fieldName = "indexType",
-			fieldValue = "Text");
 	}
 
 	@description = "This is a test for LPS-98071. As a Developer, I want to Implement the geolocation field type"
@@ -283,7 +193,7 @@ definition {
 
 		WebContentStructures.saveCP();
 
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
 
 		AssertElementPresent(
 			key_fieldFieldLabel = "Geolocation",
@@ -293,9 +203,9 @@ definition {
 			fieldFieldLabel = "Geolocation",
 			showLabel = "false");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
 
 		AssertElementNotPresent(
 			key_fieldFieldLabel = "Geolocation",
@@ -318,13 +228,13 @@ definition {
 
 		DataEngine.duplicate(fieldFieldLabel = "${key_Label}");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
 		Navigator.gotoNavItem(navItem = "Web Content");
 
 		LexiconEntry.gotoAdd();
 
-		MenuItem.click(menuItem = "My Structure Name 1");
+		MenuItem.click(menuItem = "My Structure Name");
 
 		WebContent.addCP(webContentTitle = "My Web Content Name 1");
 
@@ -349,9 +259,9 @@ definition {
 
 		DataEngine.editFieldRequired(fieldFieldLabel = "${key_fieldLabel}");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
 
 		AssertElementPresent(locator1 = "Icon#ASTERISK");
 
@@ -364,9 +274,9 @@ definition {
 			key_toggleSwitchLabel = "Required Field",
 			locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
 
-		WebContentStructures.saveCP(structureName = "My Structure Name 1");
+		WebContentStructures.saveCP(structureName = "My Structure Name");
 
-		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name 1");
+		WebContentNavigator.gotoEditStructure(structureName = "My Structure Name");
 
 		AssertElementNotPresent(locator1 = "Icon#ASTERISK");
 	}

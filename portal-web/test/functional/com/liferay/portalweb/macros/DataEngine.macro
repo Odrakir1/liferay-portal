@@ -1162,6 +1162,17 @@ definition {
 		Click(locator1 = "Sidebar#BACK");
 	}
 
+	macro gotoAdvancedTabOfField {
+		AssertClick.assertPartialTextClickAt(
+			key_fieldFieldLabel = "${fieldLabel}",
+			locator1 = "DDMEditStructure#FORM_FIELD_CONTAINER",
+			value1 = "${fieldLabel}");
+
+		if (IsElementNotPresent(locator1 = "NavTab#ACTIVE_TAB_LINK", key_tab = "Advanced")) {
+			Navigator.gotoNavTab(navTab = "Advanced");
+		}
+	}
+
 	macro gotoCreateNewFieldset {
 		if (IsElementNotPresent(key_tabName = "Builder", locator1 = "Sidebar#ACTIVE_TAB")) {
 			Navigator.gotoSidebarTab(tabName = "Builder");

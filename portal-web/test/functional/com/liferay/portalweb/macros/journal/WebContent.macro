@@ -2425,9 +2425,20 @@ definition {
 				webContentTitle = "${webContentTitle}",
 				webContentTitleEscapeCharacter = "${webContentTitleEscapeCharacter}");
 
-			AssertTextEquals(
-				locator1 = "TextInput#TITLE",
-				value1 = "${webContentTitle}");
+			if (isSet(webContentLocaleFieldLabel)) {
+				PortletEntry.changeLocale(locale = "${webContentLocaleFieldLabel}");
+			}
+			
+			if (isSet(webContentTitleTranslated)) {
+				AssertTextEquals(
+					locator1 = "TextInput#TITLE",
+					value1 = "${webContentTitleTranslated}");
+			}
+			else {
+				AssertTextEquals(
+					locator1 = "TextInput#TITLE",
+					value1 = "${webContentTitle}");
+			}
 
 			if (isSet(description)) {
 				SelectFrame.selectFrameNoLoading(

@@ -760,12 +760,12 @@ definition {
 			if ("${field}" == "Date") {
 				AssertTextEquals(
 					locator1 = "DDLRecord#FIELD_1",
-					value1 = "${fieldFieldLabel} ${ddlRecordFieldData_1}");
+					value1 = "${fieldFieldLabel}");
 			}
 			else {
 				AssertTextEquals(
 					locator1 = "DDLRecord#FIELD_1",
-					value1 = "${fieldFieldLabel} ${ddlRecordFieldData}");
+					value1 = "${fieldFieldLabel}");
 			}
 		}
 	}

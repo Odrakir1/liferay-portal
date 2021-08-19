@@ -201,8 +201,10 @@ page import="com.liferay.portal.model.impl.*" %><%@
 page import="com.liferay.portal.upload.LiferayFileItem" %><%@
 page import="com.liferay.rss.util.RSSUtil" %><%@
 page import="com.liferay.taglib.search.ResultRow" %><%@
-page import="com.liferay.taglib.util.CustomAttributesUtil" %>
-
+page import="com.liferay.taglib.util.CustomAttributesUtil" %><%@
+page import="com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil" %><%@
+page import="com.liferay.document.library.display.context.DLEditFileEntryDisplayContext" %><%@
+page import="com.liferay.document.library.display.context.DLFilePicker" %>
 <%@ page import="java.text.Format" %>
 
 <%@ page import="java.util.ArrayList" %><%@
@@ -220,6 +222,7 @@ page import="javax.portlet.PortletRequest" %><%@
 page import="javax.portlet.PortletURL" %><%@
 page import="javax.portlet.ResourceURL" %><%@
 page import="javax.portlet.WindowState" %>
+<%@ page import="com.liferay.document.library.configuration.DLConfiguration" %>
 
 <liferay-frontend:defineObjects />
 
@@ -241,6 +244,9 @@ JournalWebRequestHelper journalWebRequestHelper = new JournalWebRequestHelper(re
 JournalGroupServiceConfiguration journalGroupServiceConfiguration = journalWebRequestHelper.getJournalGroupServiceConfiguration();
 
 Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
+
+DLConfiguration dlConfiguration = ConfigurationProviderUtil.getSystemConfiguration(DLConfiguration.class);
+
 %>
 
 <%@ include file="/init-ext.jsp" %>

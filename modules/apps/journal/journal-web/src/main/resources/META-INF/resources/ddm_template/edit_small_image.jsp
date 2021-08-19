@@ -22,6 +22,10 @@ JournalEditDDMTemplateDisplayContext journalEditDDMTemplateDisplayContext = new 
 DDMTemplate ddmTemplate = journalEditDDMTemplateDisplayContext.getDDMTemplate();
 
 String smallImageSource = journalEditDDMTemplateDisplayContext.getSmallImageSource();
+
+DLEditFileEntryDisplayContext dlEditFileEntryDisplayContext = null;
+
+DLFilePicker dlFilePicker = dlEditFileEntryDisplayContext.getDLFilePicker(liferayPortletResponse.getNamespace() + "onFilePick");
 %>
 
 <aui:model-context bean="<%= ddmTemplate %>" model="<%= DDMTemplate.class %>" />
@@ -57,17 +61,30 @@ String smallImageSource = journalEditDDMTemplateDisplayContext.getSmallImageSour
 </div>
 
 <div class="<%= Objects.equals(smallImageSource, "file") ? "" : "hide" %>" id="<portlet:namespace />smallImageFileContainer">
-	<aui:input label="" name="smallImageFile" type="file" wrapperCssClass="mb-3" />
+<c:if test="<%= journalEditDDMTemplateDisplayContext.isSmallImage() && (ddmTemplate != null) && (ddmTemplate.getSmallImageId() > 0) %>">
+	<label class="control-label">
+		<liferay-ui:message key="preview" />
+	</label>
 
-	<c:if test="<%= journalEditDDMTemplateDisplayContext.isSmallImage() && (ddmTemplate != null) && (ddmTemplate.getSmallImageId() > 0) %>">
-		<p class="control-label font-weight-semi-bold">
-			<liferay-ui:message key="preview" />
-		</p>
+	<div class="form-group">
+		<aui:button value="select-file" />
 
-		<div class="aspect-ratio aspect-ratio-16-to-9">
-			<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="preview" />" class="aspect-ratio-item-fluid" src="<%= HtmlUtil.escapeAttribute(ddmTemplate.getTemplateImageURL(themeDisplay)) %>" />
-		</div>
-	</c:if>
+		<react:component
+			module="document_library/js/FileEntryPicker"
+			servletContext="<%= application %>"
+			props='<%=
+					HashMapBuilder.<String, Object>put(
+						"maxFileSize", dlEditFileEntryDisplayContext.getMaximumUploadSize()
+					).put(
+						"namespace", liferayPortletResponse.getNamespace()
+					).put(
+						"validExtensions", StringUtil.merge(dlConfiguration.fileExtensions())
+					).build()
+				%>'
+		/>
+	</div>
+</c:if>
+
 </div>
 
 <aui:script>

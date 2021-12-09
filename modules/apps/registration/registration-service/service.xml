@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.liferay.pair.registration">
+	<namespace>Acme</namespace>
+	<!--<entity data-source="sampleDataSource" local-service="true" name="Registration" remote-service="false" session-factory="sampleSessionFactory" table="Registration" tx-manager="sampleTransactionManager uuid="true"">-->
+	<entity local-service="true" name="Registration"
+		remote-service="true">
+
+		<!-- PK fields -->
+
+		<column name="registrationId" primary="true" type="long"></column>
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long"></column>
+
+		<!-- Audit fields -->
+
+		<column name="userId" type="long"></column>
+		<column name="companyId" type="long"></column>
+		<column name="createDate" type="Date"></column>
+		<column name="modifiedDate" type="Date"></column>
+		
+		<!-- Other fields -->
+		
+        <column name="firstName" type="String"></column>
+        <column name="lastName" type="String"></column>
+        <column name="emailAddress" type="String"></column>
+        <column name="username" type="String"></column>
+        <column name="male" type="boolean"></column>
+        <column name="birthday" type="Date"></column>
+        <column name="password" type="String"></column>
+        <column name="confirmPassword" type="String"></column>
+        <column name="homePhone" type="String" />
+		<column name="mobilePhone" type="String" />
+		<column name="address1" type="String" />
+		<column name="address2" type="String" />
+		<column name="city" type="String" />
+		<column name="state" type="String" />
+		<column name="zipcode" type="String" />
+		<column name="securityQuestion" type="String" />
+		<column name="answer" type="String" />
+		<column name="acceptedToU" type="boolean" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="firstName"></order-column>
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="GroupId" return-type="User">
+			<finder-column name="groupId"></finder-column>
+		</finder>
+        
+	</entity>
+
+	<entity local-service="true" name="RegistrationTrack" remote-service="true">
+		<column name="registrationTrackId" primary="true" type="long"></column>
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long"></column>
+
+		<!-- Audit fields -->
+
+		<column name="userId" type="long"></column>
+		<column name="companyId" type="long"></column>
+		<column name="createDate" type="Date"></column>
+		<column name="modifiedDate" type="Date"></column>
+		<column name="eventDatetime" type="Date"></column>
+		<column name="screenName" type="String"></column>
+		<column name="iPAdress" type="String"></column>
+		<column name="eventType" type="String"></column>
+
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId"></finder-column>
+		</finder>
+	</entity>
+	<!-- Exceptions -->
+	
+	<exceptions>
+		<exception>RegistrationValidation</exception>
+		<exception>EmailNotValid</exception>
+		<exception>NameNotValid</exception>
+		<exception>BirthdayNotValid</exception>
+		<exception>ConfirmNotValid</exception>
+		<exception>ToUNotAccepted</exception>
+	</exceptions>
+	
+</service-builder>

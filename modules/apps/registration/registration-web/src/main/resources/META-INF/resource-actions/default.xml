@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE resource-action-mapping PUBLIC "-//Liferay//DTD Resource Action Mapping 7.4.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7_4_0.dtd">
+
+<resource-action-mapping>
+    <portlet-resource>
+        <portlet-name>com_liferay_pair_registration_web_RegistrationTrackMVCPortlet</portlet-name>
+        <permissions>
+            <supports>
+                <action-key>ADD_ENTRY</action-key>
+                <action-key>VIEW_ALL</action-key>
+                <action-key>VIEW</action-key>
+                <action-key>CONFIGURATION</action-key>
+            </supports>
+            <guest-defaults>
+                <action-key>VIEW</action-key>
+            </guest-defaults>
+            <guest-unsupported>
+                <action-key>VIEW_ALL</action-key>
+            </guest-unsupported>
+        </permissions>
+    </portlet-resource>
+</resource-action-mapping>

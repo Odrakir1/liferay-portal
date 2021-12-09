@@ -1,0 +1,23 @@
+.main-content {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+
+  .submit-button {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
+
+.centralize-content{
+  text-align: center;
+}
+
+.title {
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.tou-block {
+    margin-bottom: 10px;
+}

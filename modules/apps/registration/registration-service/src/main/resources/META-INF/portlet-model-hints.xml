@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.liferay.pair.registration.model.Registration">
+		<field name="registrationId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="firstName" type="String" />
+		<field name="lastName" type="String" />
+		<field name="emailAddress" type="String" />
+		<field name="username" type="String" />
+		<field name="male" type="boolean" />
+		<field name="birthday" type="Date" />
+		<field name="password" type="String" />
+		<field name="confirmPassword" type="String" />
+		<field name="homePhone" type="String" />
+		<field name="mobilePhone" type="String" />
+		<field name="address1" type="String" />
+		<field name="address2" type="String" />
+		<field name="city" type="String" />
+		<field name="state" type="String" />
+		<field name="zipcode" type="String" />
+		<field name="securityQuestion" type="String" />
+		<field name="answer" type="String" />
+		<field name="acceptedToU" type="boolean" />
+	</model>
+	<model name="com.liferay.pair.registration.model.RegistrationTrack">
+		<field name="registrationTrackId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="eventDatetime" type="Date" />
+		<field name="screenName" type="String" />
+		<field name="iPAdress" type="String" />
+		<field name="eventType" type="String" />
+	</model>
+</model-hints>

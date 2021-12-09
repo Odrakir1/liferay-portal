@@ -1,0 +1,372 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+package com.liferay.pair.registration.service.persistence;
+
+import com.liferay.pair.registration.exception.NoSuchRegistrationTrackException;
+import com.liferay.pair.registration.model.RegistrationTrack;
+import com.liferay.portal.kernel.service.persistence.BasePersistence;
+
+import org.osgi.annotation.versioning.ProviderType;
+
+/**
+ * The persistence interface for the registration track service.
+ *
+ * <p>
+ * Caching information and settings can be found in <code>portal.properties</code>
+ * </p>
+ *
+ * @author Brian Wing Shun Chan
+ * @see RegistrationTrackUtil
+ * @generated
+ */
+@ProviderType
+public interface RegistrationTrackPersistence
+	extends BasePersistence<RegistrationTrack> {
+
+	/*
+	 * NOTE FOR DEVELOPERS:
+	 *
+	 * Never modify or reference this interface directly. Always use {@link RegistrationTrackUtil} to access the registration track persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this interface.
+	 */
+
+	/**
+	 * Returns all the registration tracks where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the matching registration tracks
+	 */
+	public java.util.List<RegistrationTrack> findByGroupId(long groupId);
+
+	/**
+	 * Returns a range of all the registration tracks where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>RegistrationTrackModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of registration tracks
+	 * @param end the upper bound of the range of registration tracks (not inclusive)
+	 * @return the range of matching registration tracks
+	 */
+	public java.util.List<RegistrationTrack> findByGroupId(
+		long groupId, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the registration tracks where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>RegistrationTrackModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of registration tracks
+	 * @param end the upper bound of the range of registration tracks (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching registration tracks
+	 */
+	public java.util.List<RegistrationTrack> findByGroupId(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the registration tracks where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>RegistrationTrackModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of registration tracks
+	 * @param end the upper bound of the range of registration tracks (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching registration tracks
+	 */
+	public java.util.List<RegistrationTrack> findByGroupId(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Returns the first registration track in the ordered set where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching registration track
+	 * @throws NoSuchRegistrationTrackException if a matching registration track could not be found
+	 */
+	public RegistrationTrack findByGroupId_First(
+			long groupId,
+			com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+				orderByComparator)
+		throws NoSuchRegistrationTrackException;
+
+	/**
+	 * Returns the first registration track in the ordered set where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching registration track, or <code>null</code> if a matching registration track could not be found
+	 */
+	public RegistrationTrack fetchByGroupId_First(
+		long groupId,
+		com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+			orderByComparator);
+
+	/**
+	 * Returns the last registration track in the ordered set where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching registration track
+	 * @throws NoSuchRegistrationTrackException if a matching registration track could not be found
+	 */
+	public RegistrationTrack findByGroupId_Last(
+			long groupId,
+			com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+				orderByComparator)
+		throws NoSuchRegistrationTrackException;
+
+	/**
+	 * Returns the last registration track in the ordered set where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching registration track, or <code>null</code> if a matching registration track could not be found
+	 */
+	public RegistrationTrack fetchByGroupId_Last(
+		long groupId,
+		com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+			orderByComparator);
+
+	/**
+	 * Returns the registration tracks before and after the current registration track in the ordered set where groupId = &#63;.
+	 *
+	 * @param registrationTrackId the primary key of the current registration track
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next registration track
+	 * @throws NoSuchRegistrationTrackException if a registration track with the primary key could not be found
+	 */
+	public RegistrationTrack[] findByGroupId_PrevAndNext(
+			long registrationTrackId, long groupId,
+			com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+				orderByComparator)
+		throws NoSuchRegistrationTrackException;
+
+	/**
+	 * Returns all the registration tracks that the user has permission to view where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the matching registration tracks that the user has permission to view
+	 */
+	public java.util.List<RegistrationTrack> filterFindByGroupId(long groupId);
+
+	/**
+	 * Returns a range of all the registration tracks that the user has permission to view where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>RegistrationTrackModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of registration tracks
+	 * @param end the upper bound of the range of registration tracks (not inclusive)
+	 * @return the range of matching registration tracks that the user has permission to view
+	 */
+	public java.util.List<RegistrationTrack> filterFindByGroupId(
+		long groupId, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the registration tracks that the user has permissions to view where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>RegistrationTrackModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of registration tracks
+	 * @param end the upper bound of the range of registration tracks (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching registration tracks that the user has permission to view
+	 */
+	public java.util.List<RegistrationTrack> filterFindByGroupId(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+			orderByComparator);
+
+	/**
+	 * Returns the registration tracks before and after the current registration track in the ordered set of registration tracks that the user has permission to view where groupId = &#63;.
+	 *
+	 * @param registrationTrackId the primary key of the current registration track
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next registration track
+	 * @throws NoSuchRegistrationTrackException if a registration track with the primary key could not be found
+	 */
+	public RegistrationTrack[] filterFindByGroupId_PrevAndNext(
+			long registrationTrackId, long groupId,
+			com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+				orderByComparator)
+		throws NoSuchRegistrationTrackException;
+
+	/**
+	 * Removes all the registration tracks where groupId = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 */
+	public void removeByGroupId(long groupId);
+
+	/**
+	 * Returns the number of registration tracks where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the number of matching registration tracks
+	 */
+	public int countByGroupId(long groupId);
+
+	/**
+	 * Returns the number of registration tracks that the user has permission to view where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the number of matching registration tracks that the user has permission to view
+	 */
+	public int filterCountByGroupId(long groupId);
+
+	/**
+	 * Caches the registration track in the entity cache if it is enabled.
+	 *
+	 * @param registrationTrack the registration track
+	 */
+	public void cacheResult(RegistrationTrack registrationTrack);
+
+	/**
+	 * Caches the registration tracks in the entity cache if it is enabled.
+	 *
+	 * @param registrationTracks the registration tracks
+	 */
+	public void cacheResult(
+		java.util.List<RegistrationTrack> registrationTracks);
+
+	/**
+	 * Creates a new registration track with the primary key. Does not add the registration track to the database.
+	 *
+	 * @param registrationTrackId the primary key for the new registration track
+	 * @return the new registration track
+	 */
+	public RegistrationTrack create(long registrationTrackId);
+
+	/**
+	 * Removes the registration track with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * @param registrationTrackId the primary key of the registration track
+	 * @return the registration track that was removed
+	 * @throws NoSuchRegistrationTrackException if a registration track with the primary key could not be found
+	 */
+	public RegistrationTrack remove(long registrationTrackId)
+		throws NoSuchRegistrationTrackException;
+
+	public RegistrationTrack updateImpl(RegistrationTrack registrationTrack);
+
+	/**
+	 * Returns the registration track with the primary key or throws a <code>NoSuchRegistrationTrackException</code> if it could not be found.
+	 *
+	 * @param registrationTrackId the primary key of the registration track
+	 * @return the registration track
+	 * @throws NoSuchRegistrationTrackException if a registration track with the primary key could not be found
+	 */
+	public RegistrationTrack findByPrimaryKey(long registrationTrackId)
+		throws NoSuchRegistrationTrackException;
+
+	/**
+	 * Returns the registration track with the primary key or returns <code>null</code> if it could not be found.
+	 *
+	 * @param registrationTrackId the primary key of the registration track
+	 * @return the registration track, or <code>null</code> if a registration track with the primary key could not be found
+	 */
+	public RegistrationTrack fetchByPrimaryKey(long registrationTrackId);
+
+	/**
+	 * Returns all the registration tracks.
+	 *
+	 * @return the registration tracks
+	 */
+	public java.util.List<RegistrationTrack> findAll();
+
+	/**
+	 * Returns a range of all the registration tracks.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>RegistrationTrackModelImpl</code>.
+	 * </p>
+	 *
+	 * @param start the lower bound of the range of registration tracks
+	 * @param end the upper bound of the range of registration tracks (not inclusive)
+	 * @return the range of registration tracks
+	 */
+	public java.util.List<RegistrationTrack> findAll(int start, int end);
+
+	/**
+	 * Returns an ordered range of all the registration tracks.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>RegistrationTrackModelImpl</code>.
+	 * </p>
+	 *
+	 * @param start the lower bound of the range of registration tracks
+	 * @param end the upper bound of the range of registration tracks (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of registration tracks
+	 */
+	public java.util.List<RegistrationTrack> findAll(
+		int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the registration tracks.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>RegistrationTrackModelImpl</code>.
+	 * </p>
+	 *
+	 * @param start the lower bound of the range of registration tracks
+	 * @param end the upper bound of the range of registration tracks (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of registration tracks
+	 */
+	public java.util.List<RegistrationTrack> findAll(
+		int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<RegistrationTrack>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Removes all the registration tracks from the database.
+	 */
+	public void removeAll();
+
+	/**
+	 * Returns the number of registration tracks.
+	 *
+	 * @return the number of registration tracks
+	 */
+	public int countAll();
+
+}

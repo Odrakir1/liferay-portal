@@ -1,54 +1,140 @@
-import {useQuery} from '@apollo/client';
-import {useContext, useEffect} from 'react';
-import {usePageGuard} from '../../../../common/hooks/usePageGuard';
-import {getKoroneikiAccounts} from '../../../../common/services/liferay/graphql/queries';
-import Subscriptions from '../../components/Subscriptions';
-import {AppContext} from '../../context';
+import {useEffect, useState} from 'react';
+import client from '../../../../apolloClient';
+import {getAccountSubscriptions} from '../../../../common/services/liferay/graphql/queries';
+import CardSubscription from '../../components/CardSubscription';
+import SubscriptionsFilterByStatus from '../../components/SubscriptionsFilterByStatus';
+import SubscriptionsNavbar from '../../components/SubscriptionsNavbar';
+import {useCustomerPortal} from '../../context';
 import {actionTypes} from '../../context/reducer';
-import {CUSTOM_EVENTS} from '../../utils/constants';
+import {SUBSCRIPTIONS_STATUS} from '../../utils/constants';
+import {getWebContents} from '../../utils/webContentsGenerator';
+import OverviewSkeleton from './Skeleton';
 
-const Overview = ({userAccount}) => {
-	const [{project}, dispatch] = useContext(AppContext);
-
-	const {isLoading} = usePageGuard(
-		userAccount,
-		project.accountKey,
-		'overview'
+const Overview = ({project, subscriptionGroups}) => {
+	const [, dispatch] = useCustomerPortal();
+	const [accountSubscriptions, setAccountSubscriptions] = useState([]);
+	const [selectedSubscriptionGroup, setSelectedSubscriptionGroup] = useState(
+		''
 	);
+	const [selectedStatus, setSelectedStatus] = useState([
+		SUBSCRIPTIONS_STATUS.active,
+		SUBSCRIPTIONS_STATUS.expired,
+		SUBSCRIPTIONS_STATUS.future,
+	]);
 
-	const {data, isLoading: isLoadingKoroneiki} = useQuery(
-		getKoroneikiAccounts,
-		{
-			variables: {
-				filter: `accountKey eq '${project.accountKey}'`,
-			},
+	const parseAccountSubscriptionGroupERC = (subscriptionName) => {
+		return subscriptionName.toLowerCase().replace(' ', '-');
+	};
+
+	const getAccountSubscriptionFilterQueryString = (
+		previousValue,
+		currentValue,
+		currentIndex,
+		array
+	) => {
+		if (currentIndex === array.length - 1) {
+			return previousValue + ` subscriptionStatus eq '${currentValue}'`;
 		}
-	);
+
+		return (
+			previousValue +
+			` subscriptionStatus eq '${currentValue}' or accountSubscriptionGroupERC eq '${
+				project.accountKey
+			}_${parseAccountSubscriptionGroupERC(
+				selectedSubscriptionGroup
+			)}' and`
+		);
+	};
 
 	useEffect(() => {
-		if (!isLoading && data) {
-			const koroneikiAccount = data.c?.koroneikiAccounts?.items[0];
-
-			dispatch({
-				payload: koroneikiAccount,
-				type: actionTypes.UPDATE_PROJECT,
+		const getSubscriptions = async (
+			accountKey,
+			subscriptionGroup,
+			status
+		) => {
+			const {data: dataAccountSubscriptions} = await client.query({
+				query: getAccountSubscriptions,
+				variables: {
+					filter: `accountSubscriptionGroupERC eq '${accountKey}_${parseAccountSubscriptionGroupERC(
+						subscriptionGroup
+					)}'${
+						status.length ===
+						Object.keys(SUBSCRIPTIONS_STATUS).length
+							? ''
+							: `${status.reduce(
+									getAccountSubscriptionFilterQueryString,
+									' and'
+							  )}`
+					}`,
+				},
 			});
 
-			window.dispatchEvent(
-				new CustomEvent(CUSTOM_EVENTS.PROJECT, {
-					bubbles: true,
-					composed: true,
-					detail: koroneikiAccount,
-				})
+			if (dataAccountSubscriptions) {
+				setAccountSubscriptions(
+					dataAccountSubscriptions?.c?.accountSubscriptions?.items
+				);
+			}
+		};
+
+		if (selectedSubscriptionGroup && selectedStatus.length) {
+			getSubscriptions(
+				project.accountKey,
+				selectedSubscriptionGroup,
+				selectedStatus
 			);
 		}
-	}, [data, dispatch, isLoading]);
 
-	if (isLoading || isLoadingKoroneiki) {
-		return <div>Overview Skeleton</div>;
-	}
+		if (!selectedStatus.length) {
+			setAccountSubscriptions([]);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [project, selectedStatus, selectedSubscriptionGroup]);
 
-	return <Subscriptions accountKey={project.accountKey} />;
+	useEffect(() => {
+		dispatch({
+			payload: getWebContents({
+				dxpVersion: project.dxpVersion,
+				slaCurrent: project.slaCurrent,
+				subscriptionGroups,
+			}),
+			type: actionTypes.UPDATE_QUICK_LINKS,
+		});
+	}, [dispatch, project, subscriptionGroups]);
+
+	return (
+		<div className="d-flex flex-column">
+			<h3>Subscriptions</h3>
+
+			<SubscriptionsNavbar
+				setSelectedSubscriptionGroup={setSelectedSubscriptionGroup}
+				subscriptionGroups={subscriptionGroups}
+			/>
+
+			<SubscriptionsFilterByStatus
+				selectedStatus={selectedStatus}
+				setSelectedStatus={setSelectedStatus}
+			/>
+
+			<div className="d-flex flex-wrap mt-4">
+				{accountSubscriptions.length ? (
+					accountSubscriptions.map((accountSubscription, index) => (
+						<CardSubscription
+							cardSubscriptionData={accountSubscription}
+							key={index}
+							selectedSubscriptionGroup={
+								selectedSubscriptionGroup
+							}
+						/>
+					))
+				) : (
+					<p className="mx-auto pt-5">
+						No subscriptions match these criteria.
+					</p>
+				)}
+			</div>
+		</div>
+	);
 };
 
+Overview.Skeleton = OverviewSkeleton;
 export default Overview;

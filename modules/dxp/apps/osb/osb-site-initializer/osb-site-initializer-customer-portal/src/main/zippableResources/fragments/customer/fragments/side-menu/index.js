@@ -11,44 +11,18 @@
  * distribution rights of the Software.
  */
 
-const getAccountSubscriptionGroupsByFilter = (filter) => ({
-	query: `{
-        c {
-          accountSubscriptionGroups(filter: "accountKey eq '${filter}' and hasActivation eq true") {
-              items {
-                name
-              }
-            }
-          }
-    }`,
-});
-
-const doFetch = async (query) => {
-	const queryString = JSON.stringify(query);
-
-	const response = await fetch(`${window.location.origin}/o/graphql`, {
-		body: queryString,
-		headers: {
-			'Content-Type': 'application/json',
-			'x-csrf-token': Liferay.authToken,
-		},
-		method: 'POST',
-	});
-
-	const {data} = await response.json();
-
-	return data.c.accountSubscriptionGroups.items;
-};
-
 const getSubscriptionKey = (name) => {
 	return name.split(' ')[0].toLowerCase();
 };
 
+const {pathname} = new URL(Liferay.ThemeDisplay.getCanonicalURL());
+const pathSplit = pathname.split('/').filter(Boolean);
+
 const htmlElement = (name, key) => {
-	return `<li><a href="#" class="btn btn-sm btn-menu">
+	return `<li><button class="align-items-center btn btn-sm btn-menu customer-portal-side-menu-button" value="${key}" type="button">
     <img class="mr-2" width="16" src="${window.location.origin}/webdav/${pathSplit[1]}/document_library/assets/navigation-menu/${key}_icon_gray.svg" alt="" />
     ${name}
-  </a></li>`;
+  </button></li>`;
 };
 
 const setSrcIcon = (keybutton) => {
@@ -64,31 +38,40 @@ const setSrcIcon = (keybutton) => {
 
 const arrowToggleElementKey = 'customer-portal-arrow';
 const productsElementKey = '#customer-portal-products';
-
-const projectExternalReferenceCode = new URLSearchParams(
-	window.location.search
-).get('kor_id');
 const currentProducts = fragmentElement.querySelector(productsElementKey);
 let expandedHeightProducts;
 
-const {pathname} = new URL(Liferay.ThemeDisplay.getCanonicalURL());
-const pathSplit = pathname.split('/').filter(Boolean);
-
 (async () => {
 	try {
-		if (projectExternalReferenceCode) {
-			const accountSubscriptionGroups =
-				(await doFetch(
-					getAccountSubscriptionGroupsByFilter(
-						projectExternalReferenceCode
-					)
-				)) || [];
-			expandedHeightProducts = accountSubscriptionGroups.length * 40;
+		Liferay.once(
+			'customer-portal-subscription-groups-loading',
+			({detail: accountSubscriptionGroups}) => {
+				expandedHeightProducts = accountSubscriptionGroups.length * 40;
 
-			currentProducts.innerHTML = accountSubscriptionGroups
-				.map(({name}) => htmlElement(name, getSubscriptionKey(name)))
-				.join('\n');
-		}
+				currentProducts.innerHTML = accountSubscriptionGroups
+					.map(({name}) =>
+						htmlElement(name, getSubscriptionKey(name))
+					)
+					.join('\n');
+
+				const buttons =
+					fragmentElement.querySelectorAll(
+						'.customer-portal-side-menu-button'
+					) || [];
+
+				buttons.forEach((button) =>
+					button.addEventListener('click', () => {
+						window.dispatchEvent(
+							new CustomEvent('customer-portal-menu-selected', {
+								bubbles: true,
+								composed: true,
+								detail: button.value,
+							})
+						);
+					})
+				);
+			}
+		);
 	}
 	catch (error) {
 		console.error(error.message);
@@ -123,7 +106,10 @@ fragmentElement.addEventListener('click', (event) => {
 		arrow.classList.toggle('left');
 		arrow.classList.toggle('down');
 	}
-	else if (lastButton !== currentButton && currentButton.tagName === 'A') {
+	else if (
+		lastButton !== currentButton &&
+		currentButton.tagName === 'BUTTON'
+	) {
 		currentButton.classList.toggle('active');
 		lastButton.classList.toggle('active');
 

@@ -469,7 +469,8 @@ definition {
 		Panel.expandPanel(panel = "Friendly URL");
 
 		Type.typePause(
-			locator1 = "TextInput#FRIENDLY_URL",
+			inputFieldId = "friendlyURL",
+			locator1 = "TextInput#INPUT_ID",
 			value1 = "${friendlyUrl}");
 
 		PortletEntry.publish();
@@ -1330,7 +1331,8 @@ definition {
 		Panel.expandPanel(panel = "Friendly URL");
 
 		Type.typePause(
-			locator1 = "TextInput#FRIENDLY_URL",
+			inputFieldId = "friendlyURL",
+			locator1 = "TextInput#INPUT_ID",
 			value1 = "${webContentFriendlyURL}");
 	}
 
@@ -1661,7 +1663,7 @@ definition {
 			webContentTitle = "${webContentTitle}",
 			webContentTitleEscapeCharacter = "${webContentTitleEscapeCharacter}");
 
-		if (!(contains("${webContentTitleEscapeCharacter}", "{webContentTitleEscapeCharacter}"))) {
+		if (isSet(webContentTitleEscapeCharacter)) {
 			var key_webContentTitle = "${webContentTitleEscapeCharacter}";
 
 			WebContentNavigator.gotoEntryMenuItem(
@@ -2018,16 +2020,20 @@ definition {
 		AssertElementPresent(locator1 = "WCD#WEB_CONTENT_AUDIO");
 	}
 
-	macro viewAvailableLanguagesPGViaWCD {
+	macro viewAvailableLanguages {
 		Click(locator1 = "Button#LOCALIZATION_GENERIC");
 
-		AssertElementPresent(
-			key_locale = "${locale1}",
-			locator1 = "Translation#LOCALIZATION_NAME");
+		for (var availableLanguage : list "${availableLanguageList}") {
+			AssertElementPresent(
+				key_locale = "${availableLanguage}",
+				locator1 = "Translation#LOCALIZATION_NAME");
+		}
 
-		AssertElementNotPresent(
-			key_locale = "${locale2}",
-			locator1 = "Translation#LOCALIZATION_NAME");
+		for (var unavailableLanguage : list "${unavailableLanguageList}") {
+			AssertElementNotPresent(
+				key_locale = "${unavailableLanguage}",
+				locator1 = "Translation#LOCALIZATION_NAME");
+		}
 	}
 
 	macro viewCategorizationCategoryCP {
@@ -2302,7 +2308,8 @@ definition {
 		Panel.expandPanel(panel = "Friendly URL");
 
 		AssertTextEquals(
-			locator1 = "TextInput#FRIENDLY_URL",
+			inputFieldId = "friendlyURL",
+			locator1 = "TextInput#INPUT_ID",
 			value1 = "${friendlyUrl}");
 	}
 
@@ -2622,7 +2629,7 @@ definition {
 	}
 
 	macro viewTitle {
-		if (!(contains("${webContentTitleEscapeCharacter}", "{webContentTitleEscapeCharacter}"))) {
+		if (isSet(webContentTitleEscapeCharacter)) {
 			var key_webContentTitle = "${webContentTitleEscapeCharacter}";
 		}
 		else {

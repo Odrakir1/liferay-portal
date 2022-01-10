@@ -1,8 +1,10 @@
-import {useLazyQuery, useQuery} from '@apollo/client';
-import {createContext, useEffect, useReducer} from 'react';
+import {createContext, useContext, useEffect, useReducer} from 'react';
+import client from '../../../apolloClient';
 import FormProvider from '../../../common/providers/FormProvider';
 import {LiferayTheme} from '../../../common/services/liferay';
 import {
+	addAccountFlag,
+	getAccountSubscriptionGroups,
 	getKoroneikiAccounts,
 	getUserAccount,
 } from '../../../common/services/liferay/graphql/queries';
@@ -10,6 +12,9 @@ import {
 	PARAMS_KEYS,
 	SearchParams,
 } from '../../../common/services/liferay/search-params';
+import {ROUTES} from '../../../common/utils/constants';
+import {isValidPage} from '../../../common/utils/page.validation';
+import {PRODUCTS} from '../../customer-portal/utils/constants';
 import {
 	getInitialDxpAdmin,
 	getInitialInvite,
@@ -27,8 +32,8 @@ const initialForm = {
 	},
 	invites: [
 		getInitialInvite(),
-		getInitialInvite(roles.MEMBER),
-		getInitialInvite(roles.MEMBER),
+		getInitialInvite(roles.MEMBER.key),
+		getInitialInvite(roles.MEMBER.key),
 	],
 };
 
@@ -38,48 +43,113 @@ const AppContextProvider = ({assetsPath, children}) => {
 	const [state, dispatch] = useReducer(reducer, {
 		assetsPath,
 		koroneikiAccount: {},
-		project: {},
+		project: undefined,
 		step: steps.welcome,
+		subscriptionGroups: undefined,
 		userAccount: undefined,
 	});
 
-	const {data} = useQuery(getUserAccount, {
-		variables: {id: LiferayTheme.getUserId()},
-	});
-
-	const [fetchKoroneikiAccount, {data: dataKoroneikiAccount}] = useLazyQuery(
-		getKoroneikiAccounts
-	);
-
 	useEffect(() => {
-		const projectExternalReferenceCode = SearchParams.get(
-			PARAMS_KEYS.PROJECT_APPLICATION_EXTERNAL_REFERENCE_CODE
-		);
+		const getUser = async () => {
+			const {data} = await client.query({
+				query: getUserAccount,
+				variables: {
+					id: LiferayTheme.getUserId(),
+				},
+			});
 
-		fetchKoroneikiAccount({
-			variables: {
-				filter: `accountKey eq '${projectExternalReferenceCode}'`,
-			},
-		});
+			if (data) {
+				dispatch({
+					payload: data.userAccount,
+					type: actionTypes.UPDATE_USER_ACCOUNT,
+				});
 
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+				return data.userAccount;
+			}
+		};
+
+		const getProject = async (externalReferenceCode, accountBrief) => {
+			const {data: projects} = await client.query({
+				query: getKoroneikiAccounts,
+				variables: {
+					filter: `accountKey eq '${externalReferenceCode}'`,
+				},
+			});
+
+			if (projects) {
+				dispatch({
+					payload: {
+						...projects.c.koroneikiAccounts.items[0],
+						id: accountBrief.id,
+						name: accountBrief.name,
+					},
+					type: actionTypes.UPDATE_PROJECT,
+				});
+			}
+		};
+
+		const getSubscriptionGroups = async (accountKey) => {
+			const {data} = await client.query({
+				query: getAccountSubscriptionGroups,
+				variables: {
+					filter: `(accountKey eq '${accountKey}') and (name eq '${PRODUCTS.dxp_cloud}')`,
+				},
+			});
+
+			if (data) {
+				const items = data.c?.accountSubscriptionGroups?.items;
+				dispatch({
+					payload: items,
+					type: actionTypes.UPDATE_SUBSCRIPTION_GROUPS,
+				});
+			}
+		};
+
+		const fetchData = async () => {
+			const user = await getUser();
+
+			const projectExternalReferenceCode = SearchParams.get(
+				PARAMS_KEYS.PROJECT_APPLICATION_EXTERNAL_REFERENCE_CODE
+			);
+
+			if (!user) {
+				return;
+			}
+
+			const isValid = await isValidPage(
+				user,
+				projectExternalReferenceCode,
+				ROUTES.ONBOARDING
+			);
+
+			if (user && isValid) {
+				const accountBrief = user.accountBriefs?.find(
+					(accountBrief) =>
+						accountBrief.externalReferenceCode ===
+						projectExternalReferenceCode
+				);
+
+				if (accountBrief) {
+					getProject(projectExternalReferenceCode, accountBrief);
+					getSubscriptionGroups(projectExternalReferenceCode);
+
+					client.mutate({
+						mutation: addAccountFlag,
+						variables: {
+							accountFlag: {
+								accountKey: projectExternalReferenceCode,
+								name: ROUTES.ONBOARDING,
+								userUuid: user.externalReferenceCode,
+								value: 1,
+							},
+						},
+					});
+				}
+			}
+		};
+
+		fetchData();
 	}, []);
-
-	useEffect(() => {
-		if (data) {
-			dispatch({
-				payload: data.userAccount,
-				type: actionTypes.UPDATE_USER_ACCOUNT,
-			});
-		}
-
-		if (dataKoroneikiAccount) {
-			dispatch({
-				payload: dataKoroneikiAccount.c.koroneikiAccounts.items[0],
-				type: actionTypes.UPDATE_PROJECT,
-			});
-		}
-	}, [data, dataKoroneikiAccount]);
 
 	return (
 		<AppContext.Provider value={[state, dispatch]}>
@@ -88,4 +158,6 @@ const AppContextProvider = ({assetsPath, children}) => {
 	);
 };
 
-export {AppContext, AppContextProvider};
+const useOnboarding = () => useContext(AppContext);
+
+export {AppContext, AppContextProvider, useOnboarding};

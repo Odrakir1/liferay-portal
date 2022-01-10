@@ -1,5 +1,5 @@
 import ClayButton from '@clayui/button';
-import {ClayInput} from '@clayui/form';
+import ClayForm, {ClayInput} from '@clayui/form';
 import classNames from 'classnames';
 import React, {useContext, useEffect, useState} from 'react';
 import {WarningBadge} from '../../../../../common/components/fragments/Badges/Warning';
@@ -92,10 +92,13 @@ export function CreateAnAccount() {
 				to your dashboard.
 			</h5>
 
-			<div className="create-account__form">
+			<ClayForm autoComplete="off" className="create-account__form">
 				<div className="create-account__form__content-input filled form-condensed form-group mb-1 mt-4">
 					<ClayInput
+						autoComplete="off"
 						className="bg-neutral-0 email"
+						id="email"
+						name="email"
 						onChange={(event) => {
 							setEmail(event.target.value);
 						}}
@@ -105,7 +108,7 @@ export function CreateAnAccount() {
 						value={email}
 					/>
 
-					<label>Email</label>
+					<label htmlFor="email">Email</label>
 				</div>
 
 				<div>
@@ -125,6 +128,8 @@ export function CreateAnAccount() {
 					)}
 				>
 					<ClayInput
+						autoComplete="off"
+						id="password"
 						onBlur={() => {
 							if (!password) {
 								setPasswordLabel('Create a Password');
@@ -145,7 +150,7 @@ export function CreateAnAccount() {
 						value={password}
 					/>
 
-					<label>{passwordLabel}</label>
+					<label htmlFor="password">{passwordLabel}</label>
 				</div>
 
 				<div
@@ -157,6 +162,8 @@ export function CreateAnAccount() {
 					)}
 				>
 					<ClayInput
+						autoComplete="off"
+						id="rePassword"
 						onChange={(event) => {
 							setConfirmPassword(event.target.value);
 							setObjValidate(
@@ -168,11 +175,11 @@ export function CreateAnAccount() {
 						value={confirmPassword}
 					/>
 
-					<label>Re-enter Password</label>
+					<label htmlFor="rePassword">Re-enter Password</label>
 				</div>
 
 				<ListRules objValidate={objValidate} />
-			</div>
+			</ClayForm>
 
 			<div className="d-flex justify-content-end">
 				<ClayButton

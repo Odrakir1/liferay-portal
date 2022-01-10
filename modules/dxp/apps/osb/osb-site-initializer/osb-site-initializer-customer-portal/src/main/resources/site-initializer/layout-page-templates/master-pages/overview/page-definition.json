@@ -152,7 +152,7 @@
 												"paddingTop": "4",
 												"textAlign": "",
 												"textColor": "",
-												"width": "240px"
+												"width": "fit-content"
 											},
 											"layout": {
 												"borderWidth": 0,
@@ -194,15 +194,20 @@
 										"definition": {
 											"fragmentStyle": {
 												"borderWidth": "0",
+												"marginLeft": "4",
+												"marginRight": "4",
+												"marginTop": "4",
+												"paddingLeft": "2",
 												"textAlign": "",
 												"width": "100%"
 											},
 											"layout": {
 												"borderWidth": 0,
+												"contentDisplay": "FlexColumn",
 												"marginBottom": 0,
-												"marginLeft": 0,
-												"marginRight": 0,
-												"marginTop": 0,
+												"marginLeft": 2,
+												"marginRight": 2,
+												"marginTop": 2,
 												"paddingBottom": 0,
 												"paddingLeft": 0,
 												"paddingRight": 0,
@@ -211,120 +216,6 @@
 											}
 										},
 										"pageElements": [
-											{
-												"definition": {
-													"fragmentStyle": {
-														"marginTop": "4"
-													},
-													"layout": {
-														"borderWidth": 0,
-														"marginBottom": 0,
-														"marginLeft": 0,
-														"marginRight": 0,
-														"marginTop": 2,
-														"paddingBottom": 0,
-														"paddingLeft": 0,
-														"paddingRight": 0,
-														"paddingTop": 0,
-														"widthType": "Fluid"
-													}
-												},
-												"pageElements": [
-													{
-														"definition": {
-															"fragmentStyle": {
-																"height": "163px"
-															},
-															"gutters": true,
-															"modulesPerRow": 2,
-															"numberOfColumns": 2,
-															"reverseOrder": false,
-															"rowViewports": [
-																{
-																	"id": "landscapeMobile",
-																	"rowViewportDefinition": {
-																	}
-																},
-																{
-																	"id": "portraitMobile",
-																	"rowViewportDefinition": {
-																	}
-																},
-																{
-																	"id": "tablet",
-																	"rowViewportDefinition": {
-																	}
-																}
-															],
-															"verticalAlignment": "top"
-														},
-														"pageElements": [
-															{
-																"definition": {
-																	"columnViewports": [
-																		{
-																			"columnViewportDefinition": {
-																			},
-																			"id": "landscapeMobile"
-																		},
-																		{
-																			"columnViewportDefinition": {
-																			},
-																			"id": "portraitMobile"
-																		},
-																		{
-																			"columnViewportDefinition": {
-																			},
-																			"id": "tablet"
-																		}
-																	],
-																	"size": 5
-																},
-																"type": "Column"
-															},
-															{
-																"definition": {
-																	"columnViewports": [
-																		{
-																			"columnViewportDefinition": {
-																			},
-																			"id": "landscapeMobile"
-																		},
-																		{
-																			"columnViewportDefinition": {
-																			},
-																			"id": "portraitMobile"
-																		},
-																		{
-																			"columnViewportDefinition": {
-																			},
-																			"id": "tablet"
-																		}
-																	],
-																	"size": 7
-																},
-																"pageElements": [
-																	{
-																		"definition": {
-																			"fragment": {
-																				"key": "liferay-contact"
-																			},
-																			"fragmentConfig": {
-																			},
-																			"fragmentFields": [
-																			]
-																		},
-																		"type": "Fragment"
-																	}
-																],
-																"type": "Column"
-															}
-														],
-														"type": "Row"
-													}
-												],
-												"type": "Section"
-											},
 											{
 												"definition": {
 													"fragmentSettings": {
@@ -351,7 +242,7 @@
 	},
 	"settings": {
 		"colorSchemeName": "01",
-		"css": "@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;500;600;700;800&display=swap');",
+		"css": "@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700;800&display=swap');",
 		"styleBook": {
 			"key": "customer-portal",
 			"name": "Customer Portal"

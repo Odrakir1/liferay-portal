@@ -143,7 +143,7 @@ definition {
 		}
 
 		task ("View the community options are checked in page settings") {
-			Page.viewPanelPortletListCP(
+			PagesAdmin.viewPanelPortletList(
 				componentName = "Community",
 				pageName = "Test Page Name 2",
 				portletNameList = "Bookmarks,My Sites,Page Comments,Page Flags,Page Ratings");
@@ -192,7 +192,7 @@ definition {
 
 			Navigator.gotoEditPageViaControlMenu(pageName = "Test Page Name");
 
-			Page.editName(pageNameEdit = "Test Page Name Edit");
+			PagesAdmin.editName(pageNameEdit = "Test Page Name Edit");
 		}
 
 		task ("View the edited name in pages admin") {
@@ -200,7 +200,7 @@ definition {
 				pageName = "Test Page Name Edit",
 				siteName = "Test Site Name");
 
-			Page.view(
+			PagesAdmin.viewPageItemPresent(
 				pageName = "Test Page Name Edit",
 				privacy = "Public Pages");
 		}
@@ -212,7 +212,7 @@ definition {
 
 			Navigator.gotoEditPageViaControlMenu(pageName = "Test Page Name Edit");
 
-			Page.editPageMetadata(
+			PagesAdmin.editSeoMetadata(
 				htmlTitle = "S.P.A.C.E.Home",
 				metaTagsDescription = "Welcome to S.P.A.C.E., a graduate-level school for those passionate about expanding their horizons through science, research, and space travel",
 				metaTagsKeywords = "space, education, space travel, graduateschool");
@@ -225,7 +225,7 @@ definition {
 
 			Navigator.gotoEditPageViaControlMenu(pageName = "Test Page Name Edit");
 
-			Page.viewPageMetadata(
+			PagesAdmin.viewSeoMetadata(
 				htmlTitle = "S.P.A.C.E.Home",
 				metaTagsDescription = "Welcome to S.P.A.C.E., a graduate-level school for those passionate about expanding their horizons through science, research, and space travel",
 				metaTagsKeywords = "space, education, space travel, graduateschool");
@@ -248,13 +248,15 @@ definition {
 				menuItem = "Configure",
 				pageName = "Test Page Name");
 
-			Page.addFriendlyURLLocalizedPG(
-				friendlyUrlLocalized = "de-DE",
-				localizedFriendlyURL = "/german");
+			PagesAdmin.addLocalizedFriendlyURL(
+				configureWithoutSave = "true",
+				friendlyUrlLocalizedList = "de-DE",
+				localizedFriendlyURLList = "/german",
+				localizedNameList = "-");
 		}
 
 		task ("Delete default friendly url") {
-			Page.deleteFriendlyURLPG(friendlyUrlLocalized = "en-US");
+			PagesAdmin.deleteFriendlyURL(locale = "en-US");
 		}
 
 		task ("View no error thrown on console when navigating to page") {
@@ -272,7 +274,7 @@ definition {
 				menuItem = "Configure",
 				pageName = "Test Page Name");
 
-			Page.viewPageFriendlyURLPG(pageName = "test-page-name");
+			PagesAdmin.viewFriendlyURL(pageName = "test-page-name");
 		}
 	}
 

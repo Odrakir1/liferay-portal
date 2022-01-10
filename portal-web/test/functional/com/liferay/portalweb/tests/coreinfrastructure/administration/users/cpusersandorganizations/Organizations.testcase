@@ -325,7 +325,7 @@ definition {
 			pageName = "Private Page",
 			url = "${portalURL}/group/organization-name/private-page");
 
-		Page.view(
+		PagesAdmin.viewPageItemPresent(
 			pageName = "Private Page",
 			privacy = "Private Pages");
 	}
@@ -364,7 +364,7 @@ definition {
 			pageName = "Public Page",
 			url = "${portalURL}/web/organization-name/public-page");
 
-		Page.view(
+		PagesAdmin.viewPageItemPresent(
 			pageName = "Public Page",
 			privacy = "Public Pages");
 	}
@@ -1410,9 +1410,9 @@ definition {
 
 		Organization.addSiteCP(orgName = "Organization Site Bravo");
 
-		PortalSettings.editConfigurationUsersDefaultUserAssociationsSitesCP(siteName = "Site Name Alpha");
+		PortalSettings.editConfigurationUsersDefaultUserAssociationsCP(siteName = "Site Name Alpha");
 
-		PortalSettings.editConfigurationUsersDefaultUserAssociationsOrganizationSitesCP(orgName = "Organization Site Bravo");
+		PortalSettings.editConfigurationUsersDefaultUserAssociationsCP(orgName = "Organization Site Bravo");
 
 		JSONUser.addUser(
 			userEmailAddress = "userea@liferay.com",

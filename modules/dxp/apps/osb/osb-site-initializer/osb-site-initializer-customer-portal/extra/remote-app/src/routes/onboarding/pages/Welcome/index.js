@@ -1,47 +1,12 @@
-import {useMutation} from '@apollo/client';
-import {useContext, useEffect} from 'react';
 import BaseButton from '../../../../common/components/BaseButton';
-import {usePageGuard} from '../../../../common/hooks/usePageGuard';
-import {addAccountFlag} from '../../../../common/services/liferay/graphql/queries';
 import Layout from '../../components/Layout';
-import {AppContext} from '../../context';
+import {useOnboarding} from '../../context';
 import {actionTypes} from '../../context/reducer';
 import {steps} from '../../utils/constants';
 import WelcomeSkeleton from './Skeleton';
 
 const Welcome = ({userAccount}) => {
-	const [{assetsPath, project}, dispatch] = useContext(AppContext);
-
-	const {loading: loadingPageGuard} = usePageGuard(
-		userAccount,
-		project.accountKey,
-		'onboarding'
-	);
-
-	const [
-		createAccountFlag,
-		{called, loading: addAccountFlagLoading},
-	] = useMutation(addAccountFlag);
-
-	useEffect(() => {
-		if (!loadingPageGuard && !called) {
-			createAccountFlag({
-				variables: {
-					accountFlag: {
-						accountKey: project.accountKey,
-						name: 'onboarding',
-						userUuid: userAccount.externalReferenceCode,
-						value: 1,
-					},
-				},
-			});
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [called, loadingPageGuard, project, userAccount]);
-
-	if (loadingPageGuard || addAccountFlagLoading) {
-		return <WelcomeSkeleton />;
-	}
+	const [{assetsPath}, dispatch] = useOnboarding();
 
 	return (
 		<Layout

@@ -17,7 +17,7 @@ definition {
 			PortalInstances.tearDownCP();
 		}
 		else {
-			Page.tearDownCP();
+			PagesAdmin.tearDownCP();
 
 			FileInstall.deleteWarOffline(liferayDependencyWars = "test-theme.war");
 		}
@@ -103,7 +103,7 @@ definition {
 			category = "Site Builder",
 			portlet = "Pages");
 
-		Page.changeCurrentTheme(
+		PagesAdmin.changeWidgetPageCurrentTheme(
 			pageName = "Theme Test Page",
 			themeName = "test-theme-7-4");
 
@@ -132,8 +132,7 @@ definition {
 
 		Theme.viewClassicThemeBackgroundColor();
 
-		Page.viewCurrentTheme(
-			page = "Public Pages",
+		PagesAdmin.viewWidgetPageCurrentTheme(
 			pageName = "Theme Test Page",
 			themeName = "Classic");
 
@@ -152,8 +151,7 @@ definition {
 
 		Theme.viewTestThemeBackgroundColor();
 
-		Page.viewCurrentTheme(
-			page = "Public Pages",
+		PagesAdmin.viewWidgetPageCurrentTheme(
 			pageName = "Theme Test Page",
 			themeName = "test-theme-7-4");
 	}
@@ -180,7 +178,7 @@ definition {
 			category = "Site Builder",
 			portlet = "Pages");
 
-		Page.changeCurrentTheme(
+		PagesAdmin.changeWidgetPageCurrentTheme(
 			pageName = "Theme Test Page",
 			themeName = "test-theme-7-4");
 
@@ -209,12 +207,13 @@ definition {
 
 		Theme.viewClassicThemeBackgroundColor();
 
-		Page.viewCurrentTheme(
-			page = "Public Pages",
+		PagesAdmin.viewWidgetPageCurrentTheme(
 			pageName = "Theme Test Page",
 			themeName = "Classic");
 
-		Click(locator1 = "SitePagesEditPage#CHANGE_CURRENT_THEME_BUTTON");
+		Click(
+			key_text = "Change Current Theme",
+			locator1 = "Button#ANY");
 
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
@@ -232,12 +231,13 @@ definition {
 
 		Theme.viewClassicThemeBackgroundColor();
 
-		Page.viewCurrentTheme(
-			page = "Public Pages",
+		PagesAdmin.viewWidgetPageCurrentTheme(
 			pageName = "Theme Test Page",
 			themeName = "Classic");
 
-		Click(locator1 = "SitePagesEditPage#CHANGE_CURRENT_THEME_BUTTON");
+		Click(
+			key_text = "Change Current Theme",
+			locator1 = "Button#ANY");
 
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 

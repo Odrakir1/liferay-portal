@@ -64,11 +64,24 @@ definition {
 			locator1 = "ObjectPortlet#ENTRY_VALUE");
 	}
 
+	macro assertEntryOnRelationshipFieldNotPresent {
+		AssertTextNotEquals(
+			locator1 = "ObjectPortlet#SEARCH_RELATIONSHIP_ENTRY",
+			value1 = "${entryValue}");
+	}
+
 	macro assertEntryStauts {
 		AssertElementPresent(
 			key_entry = "${entry}",
 			key_status = "${status}",
 			locator1 = "ObjectPortlet#ENTRY_STATUS");
+	}
+
+	macro assertFieldAtSpecificColumn {
+		AssertElementPresent(
+			key_fieldColumnNumber = "${fieldColumnNumber}",
+			key_fieldLabel = "${fieldLabel}",
+			locator1 = "ObjectAdmin#FIELD_COLUMN_POSITION_ON_ENTRY_PAGE");
 	}
 
 	macro assertFieldEntryColumnIsDisplayed {
@@ -169,6 +182,18 @@ definition {
 		Click(
 			key_dropdowntItem = "${dropdowntItem}",
 			locator1 = "ObjectPortlet#CHECK_UNCHECK_DROPDOWN_ITEM");
+	}
+
+	macro chooseEntryOnRelationshipField {
+		Click(locator1 = "ObjectPortlet#SEARCH_RELATIONSHIP_ENTRY");
+
+		KeyPress(
+			locator1 = "ObjectPortlet#SEARCH_RELATIONSHIP_ENTRY",
+			value1 = "\BACK_SPACE");
+
+		Click(
+			key_picklistOption = "${entryOption}",
+			locator1 = "ObjectAdmin#ENTRY_PICKLIST_OPTION");
 	}
 
 	macro deleteEntry {

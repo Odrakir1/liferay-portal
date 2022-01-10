@@ -1,10 +1,11 @@
 {
-	"articleId": "POSITION-07",
+	"articleId": "POSITION-05",
 	"assetCategoryERCs": [
-		"DEPCAT0001"
+		"ROLCAT0001",
+		"REGCAT0005"
 	],
 	"ddmStructureKey": "POSITION",
 	"ddmTemplateKey": "POSITION",
 	"folder": "Job Positions",
-	"name": "Senior Front End Developer"
+	"name": "Banking Product Manager"
 }

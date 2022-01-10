@@ -56,7 +56,7 @@ definition {
 
 		AssertElementNotPresent(
 			key_itemName = "Test Page Name",
-			locator1 = "SitePages#LIST_GROUP_ITEM");
+			locator1 = "PagesAdmin#LIST_GROUP_ITEM");
 
 		Navigator.gotoStagedSitePage(
 			pageName = "Staging Test Page",
@@ -93,7 +93,7 @@ definition {
 			sitePagesVariationMenulistName = "Main Variation",
 			sitePagesVariationName = "Summer");
 
-		Page.viewNoPage(
+		PagesAdmin.viewPageItemNotPresent(
 			pageName = "Page 1",
 			privacy = "Public Pages");
 	}
@@ -131,13 +131,13 @@ definition {
 			menuItem = "Configure",
 			pageName = "Test Page Name");
 
-		Page.editName(pageNameEdit = "Test Page Edit");
+		PagesAdmin.editName(pageNameEdit = "Test Page Edit");
 
 		Navigator.gotoStagedSitePage(
 			pageName = "Test Page Edit",
 			siteName = "Site Name");
 
-		Page.view(
+		PagesAdmin.viewPageItemPresent(
 			pageName = "Test Page Edit",
 			privacy = "Public Pages");
 	}
@@ -175,7 +175,7 @@ definition {
 			category = "Site Builder",
 			portlet = "Pages");
 
-		Page.viewNoPage(
+		PagesAdmin.viewPageItemNotPresent(
 			pageName = "Test Page Name",
 			privacy = "Public Pages");
 	}
@@ -199,7 +199,7 @@ definition {
 
 		Navigator.openSiteURL(siteName = "Site Name");
 
-		Page.viewNoPage(
+		PagesAdmin.viewPageItemNotPresent(
 			pageName = "Staging Test Page 2",
 			privacy = "Public Pages");
 
@@ -743,7 +743,7 @@ definition {
 
 		Navigator.gotoStagedView();
 
-		Page.changeLayoutLogo(
+		PagesAdmin.changeLogo(
 			logoFile = "Document_2.png",
 			pageName = "Staging Test Page");
 
@@ -969,7 +969,7 @@ definition {
 			menuItem = "Configure",
 			pageName = "Test Page Name");
 
-		Page.viewPageLayoutColumn(columnName = "1 Column");
+		PagesAdmin.viewSelectedLayoutColumn(columnName = "1 Column");
 	}
 
 	@priority = "4"
@@ -1054,10 +1054,9 @@ definition {
 			menuItem = "Configure",
 			pageName = "Page1");
 
-		Page.addPageTranslations(
-			page = "Page1",
-			pageTranslation = "es-ES",
-			pageTranslationName = "Página1");
+		PagesAdmin.addLocalizedName(
+			localeList = "es-ES",
+			localizedNameList = "Página1");
 
 		PagesAdmin.openPagesAdmin(siteURLKey = "site-name-staging");
 
@@ -1074,10 +1073,9 @@ definition {
 			pageName = "Page2",
 			parentPagesHierarchy = "Page1");
 
-		Page.addPageTranslations(
-			page = "Page2",
-			pageTranslation = "es-ES",
-			pageTranslationName = "Página2");
+		PagesAdmin.addLocalizedName(
+			localeList = "es-ES",
+			localizedNameList = "Página2");
 
 		Navigator.openStagingSiteURL(siteName = "Site Name");
 

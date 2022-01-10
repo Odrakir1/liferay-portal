@@ -201,7 +201,7 @@ definition {
 
 		task ("View collection pages are shown in pages admin") {
 			for (var collectionType : list "Manual,Dynamic") {
-				Page.view(
+				PagesAdmin.viewPageItemPresent(
 					pageName = "${collectionType} Collection Page Name",
 					privacy = "Public Pages");
 			}
@@ -272,7 +272,7 @@ definition {
 			var n = "2";
 
 			for (var i : list "1,2,3,4") {
-				Page.view(
+				PagesAdmin.viewPageItemPresent(
 					depth = "${n}",
 					pageName = "Child Page Name ${i}",
 					privacy = "Public Pages");
@@ -408,11 +408,11 @@ definition {
 		task ("View plus icon is shown when mouse over the page name") {
 			MouseOver(
 				key_itemName = "Child Page Name 1",
-				locator1 = "SitePages#LIST_GROUP_ITEM");
+				locator1 = "PagesAdmin#LIST_GROUP_ITEM");
 
 			AssertVisible(
 				key_pageName = "Child Page Name 1",
-				locator1 = "SitePages#LIST_GROUP_ITEM_PLUS_ICON");
+				locator1 = "PagesAdmin#LIST_GROUP_ITEM_PLUS_ICON");
 		}
 
 		task ("View child page via kebab menu action") {
@@ -428,7 +428,7 @@ definition {
 
 			Click(
 				key_pageName = "Test Page Name 1",
-				locator1 = "SitePages#LIST_GROUP_ITEM_ENTRY_TITLE_LINK");
+				locator1 = "PagesAdmin#LIST_GROUP_ITEM_ENTRY_TITLE_LINK");
 
 			ControlMenu.viewHeaderTitle(headerTitle = "Test Page Name 1");
 		}
@@ -453,7 +453,7 @@ definition {
 		task ("View child page is shown under parent page") {
 			PagesAdmin.openPagesAdmin(siteURLKey = "test-site-name");
 
-			Page.view(
+			PagesAdmin.viewPageItemPresent(
 				depth = "2",
 				pageName = "Child Page Name",
 				privacy = "Public Pages");
@@ -467,7 +467,7 @@ definition {
 
 		task ("View child and parent page are in the same level") {
 			for (var name : list "Test,Child") {
-				Page.view(
+				PagesAdmin.viewPageItemPresent(
 					pageName = "${name} Page Name",
 					privacy = "Public Pages");
 			}
@@ -514,7 +514,7 @@ definition {
 			for (var name : list "Test,Child") {
 				Click(
 					key_itemName = "${name} Page Name 1",
-					locator1 = "SitePages#LIST_GROUP_ITEM");
+					locator1 = "PagesAdmin#LIST_GROUP_ITEM");
 			}
 
 			for (var pageName : list "Test Page Name 2,Child Child Page Name 1") {
@@ -605,7 +605,7 @@ definition {
 
 			Click(
 				key_itemName = "Test Page Name 3",
-				locator1 = "SitePages#LIST_GROUP_ITEM");
+				locator1 = "PagesAdmin#LIST_GROUP_ITEM");
 
 			for (var n : list "1,2") {
 				PagesAdmin.selectPageItem(pageName = "Test Page Name ${n}");
@@ -613,7 +613,7 @@ definition {
 
 			DragAndDrop.javaScriptDragAndDropToUp(
 				key_pageName = "Test Page Name 1",
-				locator1 = "SitePages#LIST_GROUP_ITEM_DRAG_HANDLER",
+				locator1 = "PagesAdmin#LIST_GROUP_ITEM_DRAG_HANDLER",
 				locator2 = "//ul[contains(@class,'col')][3]",
 				value1 = "");
 		}
@@ -695,7 +695,7 @@ definition {
 		task ("View child page in Pages admin") {
 			PagesAdmin.openPagesAdmin(siteURLKey = "test-site-name");
 
-			Page.view(
+			PagesAdmin.viewPageItemPresent(
 				depth = "2",
 				pageName = "Child Page Name 1",
 				privacy = "Public Pages");
@@ -711,7 +711,7 @@ definition {
 			var n = "1";
 
 			for (var name : list "Child,Test") {
-				Page.view(
+				PagesAdmin.viewPageItemPresent(
 					depth = "2",
 					pageName = "${name} Page Name ${n}",
 					privacy = "Public Pages");
@@ -950,7 +950,7 @@ definition {
 
 			AssertVisible(
 				key_pageName = "Child Page Name",
-				locator1 = "SitePages#LIST_GROUP_ITEM_PLUS_ICON");
+				locator1 = "PagesAdmin#LIST_GROUP_ITEM_PLUS_ICON");
 		}
 
 		task ("View child page via action menu") {

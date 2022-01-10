@@ -24,7 +24,7 @@ definition {
 
 			Site.tearDownCP();
 
-			Page.tearDownCP();
+			PagesAdmin.tearDownCP();
 
 			DMFolder.tearDownCP();
 
@@ -113,6 +113,7 @@ definition {
 	test AddDMDocumentSiteMemberRoleInline {
 		property custom.properties = "default.layout.template.id=1_column";
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 
 		Permissions.setUpSiteMemberRoleLoginUserPG(
 			pageName = "Documents and Media Page",
@@ -206,6 +207,7 @@ definition {
 	@refactorneeded
 	test AddDMDocumentSiteRole {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 
 		Permissions.setUpSiteRoleLoginUserPG(
 			page = "Public Pages",
@@ -338,6 +340,7 @@ definition {
 	@refactorneeded
 	test CannotViewFolderAsSiteMember {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		JSONUser.addUser(
@@ -459,6 +462,7 @@ definition {
 	@refactorneeded
 	test CannotViewMultipleDocumentsAsSiteMember {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		JSONUser.addUser(
@@ -520,6 +524,7 @@ definition {
 	@priority = "5"
 	@refactorneeded
 	test DeleteDMFolderRegRoleInline {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		Permissions.setUpRegRoleLoginUserPG(
@@ -615,6 +620,7 @@ definition {
 	@refactorneeded
 	test EntryCanNotBeEditedWithoutPermissions {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 
 		JSONUser.addUser(
 			userEmailAddress = "userea@liferay.com",
@@ -800,6 +806,8 @@ definition {
 	@description = "This is a test for LPS-136836. It checks that a guest cannot update comments in a file without permissions."
 	@priority = "3"
 	test GuestCannotUpdateComments {
+		property testray.component.names = "Comment";
+
 		JSONLayout.addPublicLayout(
 			groupName = "Guest",
 			layoutName = "Documents and Media Page");
@@ -895,13 +903,60 @@ definition {
 	}
 
 	@description = "This is a test for LPS-136832. It checks that a guest can access an image in a folder through the URL when he has permissions."
-	@ignore = "Test Stub"
 	@priority = "3"
 	test GuestWithAccessToFolderCanAccessImageThroughURL {
-		property portal.acceptance = "false";
+		JSONLayout.addPublicLayout(
+			groupName = "Guest",
+			layoutName = "Documents and Media Page");
 
-		// TODO LPS-136832 GuestCannotAccessFolder pending implementation
+		JSONLayout.addWidgetToPublicLayout(
+			column = "1",
+			groupName = "Guest",
+			layoutName = "Documents and Media Page",
+			widgetName = "Documents and Media");
 
+		JSONFolder.addFolder(
+			dmFolderDescription = "DM Folder Description",
+			dmFolderName = "DM Folder Name",
+			groupName = "Guest",
+			guestPermissions = "false");
+
+		JSONDocument.addFileWithUploadedFile(
+			dmDocumentDescription = "DM Document Description",
+			dmDocumentTitle = "DM Document Title",
+			folderName = "DM Folder Name",
+			groupName = "Guest",
+			mimeType = "image/jpeg",
+			sourceFileName = "Document_1.jpg");
+
+		Navigator.gotoPage(pageName = "Documents and Media Page");
+
+		DMDocument.enableActionsMenuOnPortlet();
+
+		Navigator.gotoPage(pageName = "Documents and Media Page");
+
+		PermissionsInline.gotoDocumentsAndMediaDocumentPG(dmDocumentTitle = "DM Folder Name");
+
+		Role.definePermissionPG(
+			permissionDefinitionKey = "CONTENT_PERMISSIONS_ACCESS_CHECKBOX",
+			roleTitle = "Guest");
+
+		var dmDocumentURL = DMDocument.getDMLatestVersionURL(
+			dmDocumentTitle = "DM Document Title",
+			dmFolderName = "DM Folder Name",
+			siteURLKey = "guest");
+
+		User.logoutPG();
+
+		Navigator.gotoPage(pageName = "Documents and Media Page");
+
+		DMDocument.viewDefault();
+
+		Navigator.openSpecificURL(url = "${dmDocumentURL}");
+
+		AssertVisible(
+			key_imageSourceURL = "Document_1",
+			locator1 = "DocumentsAndMediaDocument#DOCUMENT_VIEWPORT_PREVIEW");
 	}
 
 	@description = "This test covers LPS-106905. It ensures that a site admin user is able to select an image from the global site in WCD."
@@ -974,6 +1029,7 @@ definition {
 	@refactorneeded
 	test ImportAudioAndLimitPermissionsToSubfolder {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		JSONGroup.addGroup(groupName = "Moon Rocks 101");
@@ -1507,6 +1563,7 @@ definition {
 	@priority = "3"
 	test SiteMemberCannotUpdateComments {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property testray.component.names = "Comment";
 
 		JSONUser.addUser(
 			userEmailAddress = "userea@liferay.com",
@@ -1778,14 +1835,81 @@ definition {
 		DMPortlet.viewDefaultPG();
 	}
 
-	@description = "This is a test for LPS-136840. It checks that a site member cannot access a folder without permissions."
-	@ignore = "Test Stub"
+	@description = "This is a test for LPS-136840. It checks that a site member can access an image in a folder through the URL with permissions."
 	@priority = "3"
 	test SiteMemberWithAccessToFolderCanAccessImageThroughURL {
-		property portal.acceptance = "false";
+		property custom.properties = "jsonws.web.service.paths.excludes=";
 
-		// TODO LPS-136840 SiteMemberCannotAccessFolder pending implementation
+		JSONUser.addUser(
+			userEmailAddress = "userea@liferay.com",
+			userFirstName = "userfn",
+			userLastName = "userln",
+			userScreenName = "usersn");
 
+		JSONUser.setFirstPassword(
+			agreeToTermsAndAnswerReminderQuery = "true",
+			requireReset = "false",
+			userEmailAddress = "userea@liferay.com");
+
+		JSONUser.addUserToSite(
+			groupName = "Guest",
+			userEmailAddress = "userea@liferay.com");
+
+		JSONLayout.addPublicLayout(
+			groupName = "Guest",
+			layoutName = "Documents and Media Page");
+
+		JSONLayout.addWidgetToPublicLayout(
+			column = "1",
+			groupName = "Guest",
+			layoutName = "Documents and Media Page",
+			widgetName = "Documents and Media");
+
+		JSONFolder.addFolder(
+			dmFolderDescription = "DM Folder Description",
+			dmFolderName = "DM Folder Name",
+			groupName = "Guest",
+			groupPermissions = "false",
+			guestPermissions = "false");
+
+		JSONDocument.addFileWithUploadedFile(
+			dmDocumentDescription = "DM Document Description",
+			dmDocumentTitle = "DM Document Title",
+			folderName = "DM Folder Name",
+			groupName = "Guest",
+			mimeType = "image/jpeg",
+			sourceFileName = "Document_1.jpg");
+
+		Navigator.gotoPage(pageName = "Documents and Media Page");
+
+		DMDocument.enableActionsMenuOnPortlet();
+
+		Navigator.gotoPage(pageName = "Documents and Media Page");
+
+		PermissionsInline.gotoDocumentsAndMediaDocumentPG(dmDocumentTitle = "DM Folder Name");
+
+		Role.definePermissionPG(
+			permissionDefinitionKey = "CONTENT_PERMISSIONS_ACCESS_CHECKBOX",
+			roleTitle = "site-member");
+
+		var dmDocumentURL = DMDocument.getDMLatestVersionURL(
+			dmDocumentTitle = "DM Document Title",
+			dmFolderName = "DM Folder Name",
+			siteURLKey = "guest");
+
+		User.logoutAndLoginPG(
+			userLoginEmailAddress = "userea@liferay.com",
+			userLoginFullName = "userfn userln");
+
+		Navigator.gotoPage(pageName = "Documents and Media Page");
+
+		DMDocument.viewDefault();
+
+		Navigator.openSpecificURL(url = "${dmDocumentURL}");
+
+		AssertVisible(
+			key_imageSourceURL = "Document_1",
+			locator1 = "DocumentsAndMediaDocument#DOCUMENT_VIEWPORT_PREVIEW");
 	}
 
 	@priority = "5"
@@ -1983,6 +2107,8 @@ definition {
 	@priority = "5"
 	@refactorneeded
 	test ViewDMDocumentNoGuestRole {
+		property portal.acceptance = "true";
+
 		JSONLayout.addPublicLayout(
 			groupName = "Guest",
 			layoutName = "Documents and Media Page");
@@ -2025,6 +2151,8 @@ definition {
 	@priority = "4"
 	@refactorneeded
 	test ViewDMFolderGuestInline {
+		property portal.acceptance = "true";
+
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
 			portlet = "Pages");
@@ -2136,6 +2264,7 @@ definition {
 	@refactorneeded
 	test ViewDocumentAfterDeletingAuthor {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 
 		JSONUser.addUser(
 			userEmailAddress = "userea@liferay.com",
@@ -2245,6 +2374,8 @@ definition {
 	@priority = "4"
 	@refactorneeded
 	test ViewDocumentsAndMediaPortletSiteRole {
+		property portal.acceptance = "true";
+
 		Permissions.setUpSiteRoleLoginUserCP(
 			pageName = "Documents and Media Page",
 			portletName = "Documents and Media",
@@ -2293,6 +2424,8 @@ definition {
 	@priority = "4"
 	@refactorneeded
 	test ViewDocumentViaDisplayPage {
+		property portal.acceptance = "true";
+
 		JSONLayoutpagetemplate.addDisplayPageTemplateEntry(
 			contentType = "Document",
 			displayPageTemplateEntryName = "Display Page Name",
@@ -2357,6 +2490,7 @@ definition {
 	@refactorneeded
 	test ViewDocumentWithOwnerAccessOnly {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 
 		JSONUser.addUser(
 			userEmailAddress = "userea@liferay.com",
@@ -2435,6 +2569,7 @@ definition {
 	@refactorneeded
 	test ViewFolderAsOrganizationUser {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		JSONUser.addUser(
@@ -2599,6 +2734,7 @@ definition {
 	@refactorneeded
 	test ViewSearchResultsForChildObjectRespectsParentFolderPermissions {
 		property custom.properties = "jsonws.web.service.paths.excludes=";
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "DMPermissions#ViewSearchResultsForChildObjectRespectsParentFolderPermissions";
 		property testray.component.names = "Training";
 

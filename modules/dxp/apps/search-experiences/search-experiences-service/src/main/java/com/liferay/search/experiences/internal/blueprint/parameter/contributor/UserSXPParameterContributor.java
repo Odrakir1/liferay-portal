@@ -32,14 +32,14 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.search.experiences.blueprint.parameter.BooleanSXPParameter;
-import com.liferay.search.experiences.blueprint.parameter.DateSXPParameter;
-import com.liferay.search.experiences.blueprint.parameter.IntegerSXPParameter;
-import com.liferay.search.experiences.blueprint.parameter.LongArraySXPParameter;
-import com.liferay.search.experiences.blueprint.parameter.LongSXPParameter;
 import com.liferay.search.experiences.blueprint.parameter.SXPParameter;
-import com.liferay.search.experiences.blueprint.parameter.StringSXPParameter;
 import com.liferay.search.experiences.blueprint.parameter.contributor.SXPParameterContributorDefinition;
+import com.liferay.search.experiences.internal.blueprint.parameter.BooleanSXPParameter;
+import com.liferay.search.experiences.internal.blueprint.parameter.DateSXPParameter;
+import com.liferay.search.experiences.internal.blueprint.parameter.IntegerSXPParameter;
+import com.liferay.search.experiences.internal.blueprint.parameter.LongArraySXPParameter;
+import com.liferay.search.experiences.internal.blueprint.parameter.LongSXPParameter;
+import com.liferay.search.experiences.internal.blueprint.parameter.StringSXPParameter;
 import com.liferay.search.experiences.rest.dto.v1_0.SXPBlueprint;
 import com.liferay.segments.SegmentsEntryRetriever;
 import com.liferay.segments.context.Context;
@@ -200,8 +200,7 @@ public class UserSXPParameterContributor implements SXPParameterContributor {
 				_getCurrentSiteRoleIds(scopeGroupId, user)));
 		sxpParameters.add(
 			new StringSXPParameter(
-				"user.email_address_domain", true,
-				_getEmailAddressDomain(user)));
+				"user.email_domain", true, _getEmailAddressDomain(user)));
 		sxpParameters.add(
 			new StringSXPParameter(
 				"user.first_name", true, user.getFirstName()));
@@ -257,7 +256,7 @@ public class UserSXPParameterContributor implements SXPParameterContributor {
 		int x = GetterUtil.getInteger(formatter.format(date));
 		int y = GetterUtil.getInteger(formatter.format(new Date()));
 
-		return (x - y) / 10000;
+		return (y - x) / 10000;
 	}
 
 	private Long[] _getCurrentSiteRoleIds(Long scopeGroupId, User user) {

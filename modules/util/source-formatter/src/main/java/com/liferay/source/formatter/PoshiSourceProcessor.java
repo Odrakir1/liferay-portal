@@ -14,6 +14,7 @@
 
 package com.liferay.source.formatter;
 
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.poshi.core.PoshiContext;
 import com.liferay.poshi.core.elements.PoshiElement;
 import com.liferay.poshi.core.elements.PoshiNodeFactory;
@@ -21,10 +22,15 @@ import com.liferay.poshi.core.script.PoshiScriptParserException;
 import com.liferay.poshi.core.util.FileUtil;
 import com.liferay.source.formatter.checks.util.SourceUtil;
 import com.liferay.source.formatter.util.DebugUtil;
-import com.liferay.source.formatter.util.SourceFormatterUtil;
 
 import java.io.File;
 import java.io.IOException;
+
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 import java.util.List;
 import java.util.Set;
@@ -87,33 +93,64 @@ public class PoshiSourceProcessor extends BaseSourceProcessor {
 		return newContent;
 	}
 
-	private synchronized void _populateFunctionAndMacroFiles() {
+	private synchronized void _populateFunctionAndMacroFiles()
+		throws Exception {
+
 		if (_populated) {
 			return;
 		}
 
-		List<String> functionAndMacroFileNames =
-			SourceFormatterUtil.filterFileNames(
-				getAllFileNames(), new String[0],
-				new String[] {"**/*.function", "**/*.macro"},
-				getSourceFormatterExcludes(), true);
+		Files.walkFileTree(
+			getPortalDir().toPath(),
+			new SimpleFileVisitor<Path>() {
 
-		for (String fileName : functionAndMacroFileNames) {
-			if (fileName.endsWith(".function")) {
-				PoshiContext.setFunctionFileNames(
-					fileName.replaceFirst(".+/(.+)\\.function", "$1"));
-			}
-			else if (fileName.endsWith(".macro")) {
-				PoshiContext.setMacroFileNames(
-					fileName.replaceFirst(".+/(.+)\\.macro", "$1"));
-			}
-		}
+				@Override
+				public FileVisitResult preVisitDirectory(
+						Path dirPath, BasicFileAttributes basicFileAttributes)
+					throws IOException {
+
+					if (ArrayUtil.contains(
+							_SKIP_DIR_NAMES,
+							String.valueOf(dirPath.getFileName()))) {
+
+						return FileVisitResult.SKIP_SUBTREE;
+					}
+
+					return FileVisitResult.CONTINUE;
+				}
+
+				@Override
+				public FileVisitResult visitFile(
+					Path filePath, BasicFileAttributes basicFileAttributes) {
+
+					String absolutePath = SourceUtil.getAbsolutePath(filePath);
+
+					if (absolutePath.endsWith(".function")) {
+						PoshiContext.setFunctionFileNames(
+							absolutePath.replaceFirst(
+								".+/(.+)\\.function", "$1"));
+					}
+					else if (absolutePath.endsWith(".macro")) {
+						PoshiContext.setMacroFileNames(
+							absolutePath.replaceFirst(".+/(.+)\\.macro", "$1"));
+					}
+
+					return FileVisitResult.CONTINUE;
+				}
+
+			});
 
 		_populated = true;
 	}
 
 	private static final String[] _INCLUDES = {
 		"**/*.function", "**/*.macro", "**/*.testcase"
+	};
+
+	private static final String[] _SKIP_DIR_NAMES = {
+		".git", ".gradle", ".idea", ".m2", ".releng", ".settings", "bin",
+		"build", "classes", "node_modules", "node_modules_cache", "poshi",
+		"sdk", "third-party"
 	};
 
 	private static boolean _populated;

@@ -389,6 +389,8 @@ public class DLAdminDisplayContext {
 		_rootFolderName = StringPool.BLANK;
 
 		if (_rootFolderId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			_rootFolderName = LanguageUtil.get(_httpServletRequest, "home");
+
 			return;
 		}
 
@@ -726,9 +728,9 @@ public class DLAdminDisplayContext {
 
 		searchContext.setIncludeDiscussions(true);
 		searchContext.setIncludeInternalAssetCategories(true);
-
 		searchContext.setKeywords(
 			ParamUtil.getString(_httpServletRequest, "keywords"));
+		searchContext.setLocale(_themeDisplay.getSiteDefaultLocale());
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 

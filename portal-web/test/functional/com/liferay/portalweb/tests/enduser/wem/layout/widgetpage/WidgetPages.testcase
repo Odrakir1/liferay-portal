@@ -115,14 +115,14 @@ definition {
 		task ("View parent page is shown") {
 			PagesAdmin.openPagesAdmin(siteURLKey = "test-site-name");
 
-			Page.view(
+			PagesAdmin.viewPageItemPresent(
 				pageName = "Test Page Name",
 				privacy = "Public Pages");
 		}
 
 		task ("View children pages are shwon") {
 			for (var i : list "1,2,3") {
-				Page.view(
+				PagesAdmin.viewPageItemPresent(
 					depth = "2",
 					pageName = "Test Child Page ${i}",
 					privacy = "Public Pages");
@@ -149,7 +149,7 @@ definition {
 		task ("View child page is shown") {
 			PagesAdmin.openPagesAdmin(siteURLKey = "test-site-name");
 
-			Page.view(
+			PagesAdmin.viewPageItemPresent(
 				depth = "2",
 				pageName = "Test Child Page",
 				privacy = "Private Pages");
@@ -322,7 +322,7 @@ definition {
 
 				Navigator.gotoEditPageViaControlMenu(pageName = "Test Page Name");
 
-				Page.viewSelectedLayoutColumn(columnName = "${layoutTemplate}");
+				PagesAdmin.viewSelectedLayoutColumn(columnName = "${layoutTemplate}");
 			}
 		}
 	}
@@ -381,7 +381,7 @@ definition {
 		}
 
 		task ("View first widget page is not shown") {
-			Page.viewNoPage(
+			PagesAdmin.viewPageItemNotPresent(
 				pageName = "Test Page Name 1",
 				privacy = "Public Pages");
 		}
@@ -408,11 +408,11 @@ definition {
 				menuItem = "Configure",
 				pageName = "Test Page Name 1");
 
-			Page.editName(pageNameEdit = "Test Page Name 1 Edited");
+			PagesAdmin.editName(pageNameEdit = "Test Page Name 1 Edited");
 		}
 
 		task ("View the edited name is shown") {
-			Page.view(
+			PagesAdmin.viewPageItemPresent(
 				pageName = "Test Page Name 1 Edited",
 				privacy = "Public Pages");
 		}
@@ -429,15 +429,15 @@ definition {
 				menuItem = "Configure",
 				pageName = "Test Page Name 2");
 
-			Page.viewSelectedLayoutColumn(columnName = "1 Column");
+			PagesAdmin.viewSelectedLayoutColumn(columnName = "1 Column");
 		}
 
 		task ("Edit the name of the second page") {
-			Page.editName(pageNameEdit = "Test Page Name 2 Edited");
+			PagesAdmin.editName(pageNameEdit = "Test Page Name 2 Edited");
 		}
 
 		task ("View the edited name is shown") {
-			Page.view(
+			PagesAdmin.viewPageItemPresent(
 				pageName = "Test Page Name 2 Edited",
 				privacy = "Public Pages");
 		}

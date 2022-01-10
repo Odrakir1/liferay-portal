@@ -1,46 +1,77 @@
-import {useContext} from 'react';
-import {AppContext} from '../context';
+import Layout from '../components/Layout';
+import {useCustomerPortal} from '../context';
 import {pages} from '../utils/constants';
 import ActivationKeys from './ActivationKeys';
+import DXPCloud from './DXPCloud';
 import Home from './Home';
 import Overview from './Overview';
+import TeamMembers from './TeamMembers';
 
 const Pages = () => {
-	const [{page, project, userAccount}] = useContext(AppContext);
+	const [
+		{page, project, sessionId, subscriptionGroups, userAccount},
+	] = useCustomerPortal();
 
-	if (page === pages.OVERVIEW) {
-		if (userAccount) {
-			return <Overview userAccount={userAccount} />;
-		}
-
-		return <ActivationKeys.Skeleton />;
-	}
-
-	if (page === pages.ENTERPRISE_SEARCH) {
-		if (project) {
-			return (
-				<ActivationKeys.EnterpriseSearch
-					accountKey={project.accountKey}
+	const PageLayout = {
+		[pages.COMMERCE]: {
+			Component: (
+				<ActivationKeys.Commerce
+					accountKey={project?.accountKey}
+					sessionId={sessionId}
 				/>
-			);
-		}
+			),
+			Skeleton: <ActivationKeys.Skeleton />,
+		},
+		[pages.DXP_CLOUD]: {
+			Component: <DXPCloud />,
+			Skeleton: <ActivationKeys.Skeleton />,
+		},
+		[pages.ENTERPRISE_SEARCH]: {
+			Component: (
+				<ActivationKeys.EnterpriseSearch
+					accountKey={project?.accountKey}
+					sessionId={sessionId}
+				/>
+			),
+			Skeleton: <ActivationKeys.Skeleton />,
+		},
+		[pages.HOME]: {
+			Component: <Home userAccount={userAccount} />,
+			Skeleton: <Home.Skeleton />,
+		},
+		[pages.OVERVIEW]: {
+			Component: (
+				<Overview
+					project={project}
+					subscriptionGroups={subscriptionGroups}
+				/>
+			),
+			Skeleton: <Overview.Skeleton />,
+		},
+		[pages.TEAM_MEMBERS]: {
+			Component: <TeamMembers />,
+			Skeleton: <ActivationKeys.Skeleton />,
+		},
+	};
 
-		return <ActivationKeys.Skeleton />;
+	if (
+		((project && subscriptionGroups && sessionId) || page === pages.HOME) &&
+		userAccount
+	) {
+		return (
+			<Layout
+				hasProjectContact={page === pages.OVERVIEW}
+				hasQuickLinks={
+					page !== pages.TEAM_MEMBERS && page !== pages.HOME
+				}
+				project={project}
+			>
+				{PageLayout[page].Component}
+			</Layout>
+		);
 	}
 
-	if (page === pages.COMMERCE) {
-		if (userAccount) {
-			return <ActivationKeys.Commerce accountKey={project.accountKey} />;
-		}
-
-		return <ActivationKeys.Skeleton />;
-	}
-
-	if (userAccount) {
-		return <Home userAccount={userAccount} />;
-	}
-
-	return <Home.Skeleton />;
+	return PageLayout[page].Skeleton;
 };
 
 export default Pages;

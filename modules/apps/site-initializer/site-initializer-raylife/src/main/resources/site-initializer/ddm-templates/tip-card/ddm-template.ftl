@@ -79,6 +79,12 @@
 			width: 20px;
 		}
 	</#if>
+
+	@media only screen and (max-width: 992px) {
+		#tip {
+			width: 100%;
+		}
+}
 </style>
 
 <#assign applicationNameSpace = randomNamespace />
@@ -128,7 +134,7 @@
 	</#if>
 
 	<#if pageOptions.getData()?contains("showBacktoEdit")>
-		<button class="back-to-edit-info btn btn-ghost btn-variant-neutral font-weight-bold mb-1 p-2 text-uppercase" onclick="${applicationNameSpace}backToEdit()">
+		<button class="back-to-edit-info btn btn-ghost btn-style-neutral font-weight-bold mb-1 p-2 text-uppercase" onclick="${applicationNameSpace}backToEdit()">
 		<#if (backIcon.getData())??>
 			<img src="${backIcon.getData()}" />
 		</#if>

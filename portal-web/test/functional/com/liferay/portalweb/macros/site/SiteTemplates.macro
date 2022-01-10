@@ -68,13 +68,13 @@ definition {
 
 		LexiconEntry.gotoAddMenuItem(menuItem = "Add Site Template Page");
 
-		if (contains("${sitePageType}", "{sitePageType}")) {
+		if (!(isSet(sitePageType))) {
 			var sitePageType = "Widget Page";
 		}
 
 		var rowEntry = "${sitePageType}";
 
-		if (!(contains("${pageTemplateName}", "{pageTemplateName}"))) {
+		if (isSet(pageTemplateName)) {
 			Navigator.gotoNavNested(navNested = "Global Templates");
 
 			var rowEntry = "${pageTemplateName}";
@@ -104,7 +104,7 @@ definition {
 		SelectFrame.selectFrameTop();
 
 		if (isSet(inheritChanges)) {
-			Page.togglePageTemplateInheritChanges(toggleValue = "${inheritChanges}");
+			PagesAdmin.togglePageTemplateInheritChanges(toggleValue = "${inheritChanges}");
 		}
 
 		if ("${sitePageType}" != "Content Page") {
@@ -126,7 +126,8 @@ definition {
 		Panel.expandPanel(panel = "JavaScript");
 
 		Type(
-			locator1 = "SitePages#JAVASCRIPT_TEXTAREA",
+			key_text = "javascript",
+			locator1 = "TextArea#ANY",
 			value1 = "${javaScript}");
 
 		AssertClickNoError(
@@ -402,6 +403,17 @@ definition {
 		SelectWindow(locator1 = "Home - ${siteTemplateName} - ${siteName}");
 	}
 
+	macro openSiteTemplateInEditMode {
+		var templateID = SiteTemplates.getSiteTemplateID(siteTemplateName = "${siteTemplateName}");
+
+		if (isSet(widgetPage)) {
+			Navigator.openWithAppendToBaseURL(urlAppend = "group/${templateID}");
+		}
+		else {
+			Navigator.openWithAppendToBaseURL(urlAppend = "group/${templateID}?p_l_mode=edit");
+		}
+	}
+
 	macro resetPageChanges {
 		WaitForElementPresent(locator1 = "ControlMenu#INFO");
 
@@ -548,7 +560,8 @@ definition {
 		Panel.expandPanel(panel = "JavaScript");
 
 		AssertTextEquals(
-			locator1 = "SitePages#JAVASCRIPT_TEXTAREA",
+			key_text = "javascript",
+			locator1 = "TextArea#ANY",
 			value1 = "${javaScript}");
 	}
 

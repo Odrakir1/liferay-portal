@@ -60,6 +60,7 @@ const useFormActions = (form, previousSection, nextSection, errorMessage) => {
 
 	const onSave = async () => {
 		setError('continueButton', {});
+
 		try {
 			const response = await LiferayService.createOrUpdateRaylifeApplication(
 				form

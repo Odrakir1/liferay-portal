@@ -3,12 +3,20 @@
 	height: calc(100vh - 90px - 64px - 56px) !important;
 }
 
-#cke_1_top {
-	display: none;
+.cke_top {
+	display: none !important;
 }
 
 .source-toolbar {
 	background-color: white;
+
+	.error {
+		span {
+			color: red;
+			font-size: 16px;
+			font-weight: normal;
+		}
+	}
 
 	span {
 		color: #272833;

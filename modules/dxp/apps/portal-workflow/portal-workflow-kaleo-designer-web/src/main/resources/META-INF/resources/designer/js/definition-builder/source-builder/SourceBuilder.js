@@ -13,15 +13,59 @@
 import ClayLayout from '@clayui/layout';
 import ClayToolbar from '@clayui/toolbar';
 import {Editor} from 'frontend-editor-ckeditor-web';
-import React, {useRef} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
+import {isNode} from 'react-flow-renderer';
+
+import {DefinitionBuilderContext} from '../DefinitionBuilderContext';
+import {xmlNamespace} from './constants';
+import {serializeDefinition} from './serializeUtil';
 
 const config = {
 	tabSpaces: 4,
 	toolbar: [['Source']],
 };
 
-export default function SourceBuilder() {
+export default function SourceBuilder({version}) {
+	const {
+		currentEditor,
+		definitionTitle,
+		elements,
+		setCurrentEditor,
+		setShowInvalidContentError,
+		showInvalidContentError,
+	} = useContext(DefinitionBuilderContext);
 	const editorRef = useRef();
+
+	useEffect(() => {
+		if (elements) {
+			const metada = {
+				description: '',
+				name: definitionTitle,
+				version,
+			};
+			const nodes = elements.filter(isNode);
+
+			const xmlContent = serializeDefinition(xmlNamespace, metada, nodes);
+
+			if (xmlContent && currentEditor) {
+				currentEditor.setData(xmlContent);
+			}
+		}
+	}, [currentEditor, definitionTitle, elements, version]);
+
+	useEffect(() => {
+		if (showInvalidContentError) {
+			document.addEventListener('keydown', () => {
+				setShowInvalidContentError(false);
+			});
+
+			return () => {
+				document.removeEventListener('keydown', () => {
+					setShowInvalidContentError(false);
+				});
+			};
+		}
+	}, [setShowInvalidContentError, showInvalidContentError]);
 
 	return (
 		<>
@@ -31,13 +75,27 @@ export default function SourceBuilder() {
 						<ClayToolbar.Item>
 							<span>{Liferay.Language.get('source')}</span>
 						</ClayToolbar.Item>
+
+						{showInvalidContentError && (
+							<ClayToolbar.Item className="error ml-4">
+								<span>
+									{Liferay.Language.get(
+										'please-enter-valid-content'
+									)}
+								</span>
+							</ClayToolbar.Item>
+						)}
 					</ClayToolbar.Nav>
 				</ClayLayout.ContainerFluid>
 			</ClayToolbar>
 
 			<Editor
 				config={config}
-				onInstanceReady={({editor}) => editor.setMode('source')}
+				onInstanceReady={({editor}) => {
+					setCurrentEditor(editor);
+
+					editor.setMode('source');
+				}}
 				ref={editorRef}
 			/>
 		</>

@@ -1,10 +1,10 @@
 {
 	"articleId": "ENTRY-04",
 	"assetCategoryERCs": [
-		"DEPCAT0001"
+		"ROLCAT0001"
 	],
 	"ddmStructureKey": "ENTRY",
 	"ddmTemplateKey": "ENTRY",
 	"folder": "Blog Entries",
-	"name": "5 tools everyone in the design industry should be using"
+	"name": "The worst advice we've ever heard about management"
 }

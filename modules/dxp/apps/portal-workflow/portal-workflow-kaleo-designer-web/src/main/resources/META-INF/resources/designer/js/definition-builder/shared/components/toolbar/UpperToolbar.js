@@ -17,28 +17,31 @@ import ClayLayout from '@clayui/layout';
 import ClayToolbar from '@clayui/toolbar';
 import {TranslationAdminSelector} from 'frontend-js-components-web';
 import PropTypes from 'prop-types';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 
 import {DefinitionBuilderContext} from '../../../DefinitionBuilderContext';
+import XMLUtil from '../../../source-builder/xmlUtil';
 import {getAvailableLocalesObject} from '../../../util/availableLocales';
 
 export default function UpperToolbar({
 	displayNames,
 	languageIds,
-	title,
 	translations,
 	version,
 }) {
 	const {
+		currentEditor,
 		defaultLanguageId,
+		definitionTitle,
 		selectedLanguageId,
+		setDefinitionTitle,
+		setDeserialize,
 		setSelectedLanguageId,
+		setShowInvalidContentError,
 		setSourceView,
 		sourceView,
 	} = useContext(DefinitionBuilderContext);
 	const inputRef = useRef(null);
-
-	const [definitionTitle, setDefinitionTitle] = useState(title);
 
 	const availableLocales = getAvailableLocalesObject(
 		displayNames,
@@ -49,7 +52,6 @@ export default function UpperToolbar({
 		if (id) {
 			setSelectedLanguageId(id);
 		}
-		inputRef?.current.focus();
 	};
 
 	const onInputBlur = () => {
@@ -142,7 +144,19 @@ export default function UpperToolbar({
 						{sourceView ? (
 							<ClayButtonWithIcon
 								displayType="secondary"
-								onClick={() => setSourceView(false)}
+								onClick={() => {
+									if (
+										XMLUtil.validateDefinition(
+											currentEditor.getData()
+										)
+									) {
+										setSourceView(false);
+										setDeserialize(true);
+									}
+									else {
+										setShowInvalidContentError(true);
+									}
+								}}
 								symbol="rules"
 								title={Liferay.Language.get('diagram-view')}
 							/>

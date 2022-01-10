@@ -71,7 +71,8 @@ public interface ObjectRelationshipLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public ObjectRelationship addObjectRelationship(
 			long userId, long objectDefinitionId1, long objectDefinitionId2,
-			Map<Locale, String> labelMap, String name, String type)
+			String deletionType, Map<Locale, String> labelMap, String name,
+			String type)
 		throws PortalException;
 
 	/**
@@ -299,6 +300,10 @@ public interface ObjectRelationshipLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<ObjectRelationship> getObjectRelationships(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<ObjectRelationship> getObjectRelationships(
+		long objectDefinitionId1);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<ObjectRelationship> getObjectRelationships(

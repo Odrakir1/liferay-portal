@@ -952,6 +952,10 @@ public class JenkinsResultsParserUtil {
 
 				urlString = urlString.replaceAll("\\+", "%20");
 
+				urlString = urlString.replaceAll("%21", "!");
+				urlString = urlString.replaceAll("%25", "%");
+				urlString = urlString.replaceAll("%2B", "+");
+
 				return urlString;
 			}
 			catch (UnsupportedEncodingException unsupportedEncodingException) {
@@ -979,11 +983,20 @@ public class JenkinsResultsParserUtil {
 			sb.append("=");
 
 			try {
-				String queryParameterValue = URLEncoder.encode(
-					matcher.group(2), StandardCharsets.UTF_8.name());
+				String queryParameterValue = matcher.group(2);
+
+				queryParameterValue = URLEncoder.encode(
+					queryParameterValue, StandardCharsets.UTF_8.name());
 
 				queryParameterValue = queryParameterValue.replaceAll(
 					"\\+", "%20");
+
+				queryParameterValue = queryParameterValue.replaceAll(
+					"%21", "!");
+				queryParameterValue = queryParameterValue.replaceAll(
+					"%25", "%");
+				queryParameterValue = queryParameterValue.replaceAll(
+					"%2B", "+");
 
 				sb.append(queryParameterValue);
 			}
@@ -2286,11 +2299,11 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static String getLocalURL(String remoteURL) {
-		if (remoteURL.contains("${dependencies.url}")) {
+		if (remoteURL.contains(Build.DEPENDENCIES_URL_TOKEN)) {
 			remoteURL = fixFileName(remoteURL);
 
 			String fileURL = remoteURL.replace(
-				"${dependencies.url}", URL_DEPENDENCIES_FILE);
+				Build.DEPENDENCIES_URL_TOKEN, urlDependenciesFile);
 
 			File file = new File(fileURL.substring("file:".length()));
 
@@ -2299,7 +2312,7 @@ public class JenkinsResultsParserUtil {
 			}
 			else {
 				remoteURL = remoteURL.replace(
-					"${dependencies.url}", URL_DEPENDENCIES_HTTP);
+					Build.DEPENDENCIES_URL_TOKEN, urlDependenciesHttp);
 			}
 		}
 
@@ -2479,9 +2492,29 @@ public class JenkinsResultsParserUtil {
 		Properties properties, String basePropertyName,
 		boolean useBasePropertyAsDefault, String... opts) {
 
+		String propertyName = getPropertyName(
+			properties, basePropertyName, opts);
+
+		if (!useBasePropertyAsDefault &&
+			basePropertyName.equals(propertyName)) {
+
+			return null;
+		}
+
+		return _getProperty(properties, new ArrayList<String>(), propertyName);
+	}
+
+	public static String getProperty(
+		Properties properties, String basePropertyName, String... opts) {
+
+		return getProperty(properties, basePropertyName, true, opts);
+	}
+
+	public static String getPropertyName(
+		Properties properties, String basePropertyName, String... opts) {
+
 		if ((opts == null) || (opts.length == 0)) {
-			return _getProperty(
-				properties, new ArrayList<String>(), basePropertyName);
+			return basePropertyName;
 		}
 
 		Set<String> optSet = new LinkedHashSet<>(Arrays.asList(opts));
@@ -2553,22 +2586,10 @@ public class JenkinsResultsParserUtil {
 		}
 
 		if (propertyName != null) {
-			return _getProperty(
-				properties, new ArrayList<String>(), propertyName);
+			return propertyName;
 		}
 
-		if (useBasePropertyAsDefault) {
-			return _getProperty(
-				properties, new ArrayList<String>(), basePropertyName);
-		}
-
-		return null;
-	}
-
-	public static String getProperty(
-		Properties properties, String basePropertyName, String... opts) {
-
-		return getProperty(properties, basePropertyName, true, opts);
+		return basePropertyName;
 	}
 
 	public static List<String> getPropertyOptions(String propertyName) {
@@ -3446,6 +3467,24 @@ public class JenkinsResultsParserUtil {
 		return string;
 	}
 
+	public static String removeDuplicates(
+		String delimiter, String delimitedString) {
+
+		if (isNullOrEmpty(delimitedString)) {
+			return delimitedString;
+		}
+
+		List<String> strings = new ArrayList<>();
+
+		for (String string : delimitedString.split(delimiter)) {
+			if (!strings.contains(string)) {
+				strings.add(string);
+			}
+		}
+
+		return join(",", strings);
+	}
+
 	public static List<File> removeExcludedFiles(
 		List<PathMatcher> excludesPathMatchers, List<File> files) {
 
@@ -4136,6 +4175,12 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static List<PathMatcher> toPathMatchers(
+		String prefix, List<String> globs) {
+
+		return toPathMatchers(prefix, globs.toArray(new String[0]));
+	}
+
+	public static List<PathMatcher> toPathMatchers(
 		String prefix, String... globs) {
 
 		if (prefix == null) {
@@ -4435,10 +4480,10 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static void write(String path, String content) throws IOException {
-		if (path.startsWith("${dependencies.url}")) {
+		if (path.startsWith(BaseBuild.DEPENDENCIES_URL_TOKEN)) {
 			path = path.replace(
-				"${dependencies.url}",
-				URL_DEPENDENCIES_FILE.replace("file:", ""));
+				BaseBuild.DEPENDENCIES_URL_TOKEN,
+				urlDependenciesFile.replace("file:", ""));
 		}
 
 		write(new File(path), content);
@@ -4692,9 +4737,8 @@ public class JenkinsResultsParserUtil {
 		return "http://mirrors-no-cache.lax.liferay.com/github.com/liferay";
 	}
 
-	protected static final String URL_DEPENDENCIES_FILE;
-
-	protected static final String URL_DEPENDENCIES_HTTP =
+	protected static String urlDependenciesFile;
+	protected static String urlDependenciesHttp =
 		URL_CACHE + "/liferay-jenkins-results-parser-samples-ee/1/";
 
 	static {
@@ -4705,7 +4749,7 @@ public class JenkinsResultsParserUtil {
 
 			URL url = uri.toURL();
 
-			URL_DEPENDENCIES_FILE = url.toString();
+			urlDependenciesFile = url.toString();
 		}
 		catch (MalformedURLException malformedURLException) {
 			throw new RuntimeException(malformedURLException);

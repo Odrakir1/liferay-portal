@@ -30,6 +30,7 @@ export default function BaseNode({
 	icon,
 	id,
 	label,
+	newNode,
 	type,
 	...otherProps
 }) {
@@ -38,7 +39,8 @@ export default function BaseNode({
 	const {defaultLanguageId, selectedLanguageId} = useContext(
 		DefinitionBuilderContext
 	);
-	const {availableArea, selectedNode, setSelectedNode} = useContext(
+
+	const {collidingElements, selectedItem, setSelectedItem} = useContext(
 		DiagramBuilderContext
 	);
 
@@ -75,8 +77,13 @@ export default function BaseNode({
 		}
 	});
 
-	const borderAreaColor = availableArea ? 'blue' : 'red';
-	const displayBorderArea = !descriptionSidebar && availableArea !== null;
+	let borderAreaColor = 'blue';
+	let displayBorderArea = false;
+
+	if (collidingElements !== null && collidingElements.includes(id)) {
+		borderAreaColor = 'red';
+		displayBorderArea = true;
+	}
 
 	const descriptionColor = descriptionSidebar
 		? 'text-secondary'
@@ -86,7 +93,7 @@ export default function BaseNode({
 		description = nodeDescription[type];
 	}
 
-	if (selectedNode?.id === id) {
+	if (selectedItem?.id === id) {
 		className = `${className} selected`;
 	}
 
@@ -119,6 +126,18 @@ export default function BaseNode({
 			}
 		}
 	};
+
+	if (newNode) {
+		setSelectedItem({
+			data: {
+				description,
+				label,
+				newNode: false,
+			},
+			id,
+			type,
+		});
+	}
 
 	return (
 		<div className="base-node">
@@ -167,7 +186,7 @@ export default function BaseNode({
 				className={`node ${className}`}
 				onClick={() => {
 					if (!descriptionSidebar) {
-						setSelectedNode({
+						setSelectedItem({
 							data: {
 								description,
 								label,
@@ -191,16 +210,12 @@ export default function BaseNode({
 				</div>
 
 				<div className="node-info">
-					<span
-						className="node-label truncate-container"
-						title={nodeLabel}
-					>
+					<span className="node-label truncate-container">
 						{nodeLabel}
 					</span>
 
 					<span
 						className={`node-description truncate-container ${descriptionColor}`}
-						title={descriptionSidebar ?? description}
 					>
 						{descriptionSidebar ?? description}
 					</span>

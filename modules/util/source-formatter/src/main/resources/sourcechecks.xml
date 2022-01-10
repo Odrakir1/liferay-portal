@@ -1175,7 +1175,6 @@
 		<check name="MarkdownEmptyLinesCheck">
 			<category name="Styling" />
 			<description name="Finds missing and unnecessary empty lines." />
-			<property name="enabled" value="false" />
 		</check>
 		<check name="MarkdownFileExtensionCheck">
 			<category name="Styling" />
@@ -1407,6 +1406,12 @@
 		<check name="TXTStylingCheck">
 			<category name="Styling" />
 			<description name="Applies rules to enforce consisteny in code style." />
+		</check>
+	</source-processor>
+	<source-processor name="UpgradeSourceProcessor">
+		<check name="UpgradeJavaCheck">
+			<category name="Upgrade" />
+			<description name="Performs upgrade checks for `java` files" />
 		</check>
 	</source-processor>
 	<source-processor name="XMLSourceProcessor">

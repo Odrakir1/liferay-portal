@@ -32,10 +32,8 @@ components:
                     properties:
                         parameterName:
                             type: string
-                        values:
-                            items:
-                                type: object
-                            type: array
+                        value:
+                            type: object
                     type: object
                 allConditions:
                     items:
@@ -51,10 +49,6 @@ components:
                             type: string
                         value:
                             type: object
-                        values:
-                            items:
-                                type: object
-                            type: array
                     type: object
                 equals:
                     properties:
@@ -86,28 +80,25 @@ components:
                             type: object
                         parameterName:
                             type: string
-                        value:
-                            type: object
-                        values:
-                            items:
-                                type: object
-                            type: array
                     type: object
             type: object
         Configuration:
             properties:
                 advancedConfiguration:
                     properties:
-                        excludes:
-                            items:
-                                type: string
-                            type: array
-                        fetchSource:
-                            type: boolean
-                        includes:
-                            items:
-                                type: string
-                            type: array
+                        source:
+                            properties:
+                                excludes:
+                                    items:
+                                        type: string
+                                    type: array
+                                fetchSource:
+                                    type: boolean
+                                includes:
+                                    items:
+                                        type: string
+                                    type: array
+                            type: object
                     type: object
                 aggregationConfiguration:
                     properties:
@@ -130,10 +121,14 @@ components:
                             type: boolean
                         includeResponseString:
                             type: boolean
+                        queryString:
+                            type: string
                         searchableAssetTypes:
                             items:
                                 type: string
                             type: array
+                        timeZoneId:
+                            type: string
                     type: object
                 highlightConfiguration:
                     properties:
@@ -214,6 +209,12 @@ components:
                             type: object
                     type: object
             type: object
+        DocumentField:
+            properties:
+                values:
+                    items:
+                        type: object
+                    type: array
         ElementDefinition:
             properties:
                 category:
@@ -369,6 +370,8 @@ components:
                 modifiedDate:
                     format: date
                     type: string
+                schemaVersion:
+                    type: string
                 title:
                     type: string
                 title_i18n:
@@ -401,6 +404,8 @@ components:
                     type: string
                 readOnly:
                     type: boolean
+                schemaVersion:
+                    type: string
                 title:
                     type: string
                 title_i18n:
@@ -421,16 +426,44 @@ components:
                 templateVariable:
                     type: string
             type: object
+        SearchRequest:
+            properties:
+                queryString:
+                    type: string
+            type: object
         SearchResponse:
             properties:
+                documents:
+                    items:
+                        properties:
+                            documentFields:
+                                additionalProperties:
+                                    $ref: "#/components/schemas/DocumentField"
+                                type: object
+                            explanation:
+                                type: string
+                            score:
+                                format: double
+                                type: number
+                        type: object
+                    type: array
+                maxScore:
+                    format: double
+                    type: number
                 page:
                     type: integer
                 pageSize:
                     type: integer
+                request:
+                    type: object
                 requestString:
                     type: string
+                response:
+                    type: object
                 responseString:
                     type: string
+                searchRequest:
+                    $ref: "#/components/schemas/SearchRequest"
                 totalHits:
                     type: integer
             type: object

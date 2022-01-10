@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.source.formatter.checks.SourceCheck;
 import com.liferay.source.formatter.checks.configuration.SourceChecksResult;
 import com.liferay.source.formatter.checks.configuration.SourceFormatterConfiguration;
@@ -39,12 +38,9 @@ import com.liferay.source.formatter.util.SourceFormatterUtil;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
 
-import java.awt.Desktop;
-
 import java.io.File;
 import java.io.IOException;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.nio.ByteBuffer;
@@ -60,7 +56,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -90,9 +85,6 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		}
 
 		if (fileNames.isEmpty()) {
-			addProgressStatusUpdate(
-				new ProgressStatusUpdate(ProgressStatus.CHECKS_INITIALIZED, 0));
-
 			return;
 		}
 
@@ -101,10 +93,6 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		_sourceFormatterMessagesMap = new HashMap<>();
 
 		_sourceChecks = _getSourceChecks(fileNames);
-
-		addProgressStatusUpdate(
-			new ProgressStatusUpdate(
-				ProgressStatus.CHECKS_INITIALIZED, fileNames.size()));
 
 		ExecutorService executorService = Executors.newFixedThreadPool(
 			_sourceFormatterArgs.getProcessorThreadCount());
@@ -210,13 +198,6 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	}
 
 	@Override
-	public void setProgressStatusQueue(
-		BlockingQueue<ProgressStatusUpdate> progressStatusQueue) {
-
-		_progressStatusQueue = progressStatusQueue;
-	}
-
-	@Override
 	public void setProjectPathPrefix(String projectPathPrefix) {
 		_projectPathPrefix = projectPathPrefix;
 	}
@@ -257,13 +238,6 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	@Override
 	public void setSubrepository(boolean subrepository) {
 		_subrepository = subrepository;
-	}
-
-	protected void addProgressStatusUpdate(
-			ProgressStatusUpdate progressStatusUpdate)
-		throws InterruptedException {
-
-		_progressStatusQueue.put(progressStatusUpdate);
 	}
 
 	protected abstract List<String> doGetFileNames() throws Exception;
@@ -433,15 +407,11 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		return portalImplDir.getParentFile();
 	}
 
-	protected BlockingQueue<ProgressStatusUpdate> getProgressStatusQueue() {
-		return _progressStatusQueue;
-	}
-
 	protected Map<String, Properties> getPropertiesMap() {
 		return _propertiesMap;
 	}
 
-	protected List<SourceCheck> getSourceChecks() {
+	protected Set<SourceCheck> getSourceChecks() {
 		return _sourceChecks;
 	}
 
@@ -540,24 +510,6 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 					SourceFormatterUtil.printError(
 						fileName, sourceFormatterMessage.toString());
-
-					if (_browserStarted ||
-						!_sourceFormatterArgs.isShowDocumentation() ||
-						!Desktop.isDesktopSupported()) {
-
-						continue;
-					}
-
-					String documentationURLString =
-						sourceFormatterMessage.getDocumentationURLString();
-
-					if (Validator.isNotNull(documentationURLString)) {
-						Desktop desktop = Desktop.getDesktop();
-
-						desktop.browse(new URI(documentationURLString));
-
-						_browserStarted = true;
-					}
 				}
 			}
 		}
@@ -629,9 +581,6 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 	private void _format(String fileName) throws Exception {
 		if (!_isMatchPath(fileName)) {
-			addProgressStatusUpdate(
-				new ProgressStatusUpdate(ProgressStatus.CHECK_FILE_COMPLETED));
-
 			return;
 		}
 
@@ -651,17 +600,14 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		}
 
 		format(file, fileName, absolutePath, content);
-
-		addProgressStatusUpdate(
-			new ProgressStatusUpdate(ProgressStatus.CHECK_FILE_COMPLETED));
 	}
 
-	private List<SourceCheck> _getSourceChecks(List<String> fileNames)
+	private Set<SourceCheck> _getSourceChecks(List<String> fileNames)
 		throws Exception {
 
 		Class<?> clazz = getClass();
 
-		List<SourceCheck> sourceChecks = SourceChecksUtil.getSourceChecks(
+		Set<SourceCheck> sourceChecks = SourceChecksUtil.getSourceChecks(
 			_sourceFormatterConfiguration, clazz.getSimpleName(),
 			getPropertiesMap(), _sourceFormatterArgs.getCheckNames(),
 			_sourceFormatterArgs.getCheckCategoryNames(),
@@ -797,15 +743,13 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		BaseSourceProcessor.class);
 
 	private List<String> _allFileNames;
-	private boolean _browserStarted;
 	private final List<String> _modifiedFileNames =
 		new CopyOnWriteArrayList<>();
 	private List<String> _pluginsInsideModulesDirectoryNames;
 	private boolean _portalSource;
-	private BlockingQueue<ProgressStatusUpdate> _progressStatusQueue;
 	private String _projectPathPrefix;
 	private Map<String, Properties> _propertiesMap;
-	private List<SourceCheck> _sourceChecks = new ArrayList<>();
+	private Set<SourceCheck> _sourceChecks;
 	private SourceFormatterArgs _sourceFormatterArgs;
 	private SourceFormatterConfiguration _sourceFormatterConfiguration;
 	private SourceFormatterExcludes _sourceFormatterExcludes;

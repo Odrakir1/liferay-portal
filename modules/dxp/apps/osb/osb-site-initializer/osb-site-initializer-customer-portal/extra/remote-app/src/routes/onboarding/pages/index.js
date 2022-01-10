@@ -7,25 +7,29 @@ import SuccessDXPCloud from './SuccessDXPCloud';
 import Welcome from './Welcome';
 
 const Pages = () => {
-	const [{step, userAccount}] = useContext(AppContext);
+	const [{project, step, userAccount}] = useContext(AppContext);
 
-	if (step === steps.invites) {
-		return <Invites />;
+	const StepsLayout = {
+		[steps.invites]: {
+			Component: <Invites />,
+		},
+		[steps.dxpCloud]: {
+			Component: <SetupDXPCloud />,
+		},
+		[steps.successDxpCloud]: {
+			Component: <SuccessDXPCloud />,
+		},
+		[steps.welcome]: {
+			Component: <Welcome project={project} userAccount={userAccount} />,
+			Skeleton: <Welcome.Skeleton />,
+		},
+	};
+
+	if (userAccount && project) {
+		return StepsLayout[step].Component;
 	}
 
-	if (step === steps.dxpCloud) {
-		return <SetupDXPCloud />;
-	}
-
-	if (step === steps.successDxpCloud) {
-		return <SuccessDXPCloud />;
-	}
-
-	if (userAccount) {
-		return <Welcome userAccount={userAccount} />;
-	}
-
-	return <Welcome.Skeleton />;
+	return StepsLayout[steps.welcome].Skeleton;
 };
 
 export default Pages;

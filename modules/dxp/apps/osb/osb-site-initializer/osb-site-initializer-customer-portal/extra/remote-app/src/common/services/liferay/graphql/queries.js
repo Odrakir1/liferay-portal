@@ -24,8 +24,8 @@ export const getSetupDXPCloudInfo = gql`
 export const getAccountSubscriptionsTerms = gql`
 	query getAccountSubscriptionsTerms(
 		$filter: String
-		$page: Int
-		$pageSize: Int
+		$page: Int = 1
+		$pageSize: Int = 20
 	) {
 		c {
 			accountSubscriptionTerms(
@@ -47,6 +47,24 @@ export const getAccountSubscriptionsTerms = gql`
 					subscriptionTermStatus
 				}
 				totalCount
+			}
+		}
+	}
+`;
+
+export const getStructuredContentFolders = gql`
+	query getStructuredContentFolders($siteKey: String!, $filter: String) {
+		structuredContentFolders(siteKey: $siteKey, filter: $filter) {
+			items {
+				id
+				name
+				structuredContents {
+					items {
+						friendlyUrlPath
+						id
+						key
+					}
+				}
 			}
 		}
 	}
@@ -133,6 +151,23 @@ export const addSetupDXPCloud = gql`
 	}
 `;
 
+export const addTeamMembersInvitation = gql`
+	mutation addTeamMembersInvitation(
+		$scopeKey: String
+		$TeamMembersInvitation: InputC_TeamMembersInvitation!
+	) {
+		c {
+			createTeamMembersInvitation(
+				scopeKey: $scopeKey
+				TeamMembersInvitation: $TeamMembersInvitation
+			) {
+				email
+				role
+			}
+		}
+	}
+`;
+
 export const getAccountRolesAndAccountFlags = gql`
 	query getAccountRolesAndAccountFlags(
 		$accountFlagsFilter: String
@@ -151,6 +186,17 @@ export const getAccountRolesAndAccountFlags = gql`
 					name
 					userUuid
 				}
+			}
+		}
+	}
+`;
+
+export const getAccountRoles = gql`
+	query getAccountRoles($accountId: Long!) {
+		accountAccountRoles(accountId: $accountId) {
+			items {
+				id
+				name
 			}
 		}
 	}
@@ -191,11 +237,11 @@ export const getKoroneikiAccounts = gql`
 					accountKey
 					code
 					dxpVersion
-					partner
-					maxRequestors
 					liferayContactEmailAddress
 					liferayContactName
 					liferayContactRole
+					maxRequestors
+					partner
 					region
 					slaCurrent
 					slaCurrentEndDate
@@ -219,19 +265,6 @@ export const getUserAccount = gql`
 			id
 			image
 			name
-		}
-	}
-`;
-
-export const getAccountSubscriptionsGroups = gql`
-	query getAccountSubscriptionGroups($accountSubscriptionGroupERC: String) {
-		c {
-			accountSubscriptions(filter: $accountSubscriptionGroupERC) {
-				items {
-					name
-					accountSubscriptionGroupERC
-				}
-			}
 		}
 	}
 `;
